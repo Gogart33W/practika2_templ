@@ -37,6 +37,8 @@ namespace Navchpract_2
             if (this.Controls.ContainsKey("lblUserInfo"))
             {
                 this.Controls["lblUserInfo"].Text = $"Користувач: {currentUser.Login} ({role})";
+                // Центруємо напис
+                this.Controls["lblUserInfo"].Left = (this.ClientSize.Width - this.Controls["lblUserInfo"].Width) / 2;
             }
         }
 
@@ -48,18 +50,17 @@ namespace Navchpract_2
             }
         }
 
-        // ПРОФЕСІЙНИЙ ПІДХІД: ShowDialog() + using для очищення пам'яті
         private void OpenModule<T>() where T : Form, new()
         {
-            this.Hide(); // Залізно ховаємо стартову форму
+            this.Hide();
 
             using (T module = new T())
             {
                 module.StartPosition = FormStartPosition.CenterScreen;
-                module.ShowDialog(); // Відкриваємо модуль (він блокує виконання коду далі, поки його не закриють)
-            } // ТУТ: Форма видаляється з оперативки після закриття
+                module.ShowDialog();
+            }
 
-            this.Show(); // Показуємо стартову назад
+            this.Show();
         }
 
         private void практична11ToolStripMenuItem_Click(object sender, EventArgs e) { OpenModule<Form1>(); }
@@ -76,15 +77,15 @@ namespace Navchpract_2
                 return;
             }
 
-            this.Hide(); // Залізно ховаємо стартову
+            this.Hide();
 
             using (AdminForm adminForm = new AdminForm(currentUser))
             {
                 adminForm.StartPosition = FormStartPosition.CenterScreen;
-                adminForm.ShowDialog(); // Відкриваємо адмінку як діалогове вікно
+                adminForm.ShowDialog();
             }
 
-            this.Show(); // Повертаємо стартову після закриття адмінки
+            this.Show();
         }
 
         private void третійТижденьToolStripMenuItem_Click(object sender, EventArgs e) { }

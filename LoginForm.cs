@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 
 namespace Navchpract_2
@@ -16,19 +17,20 @@ namespace Navchpract_2
             InitializeComponent();
             this.StartPosition = FormStartPosition.CenterScreen;
             binPath = Path.Combine(Application.StartupPath, "input.bin");
+        }
 
-            this.Load += LoginForm_Load;
-            this.btnLogin.Click += btnLogin_Click;
-            this.btnShowPass.Click += btnShowPass_Click;
-            this.btnHidePass.Click += btnHidePass_Click;
-            this.btnClear.Click += btnClear_Click;
+        // --- МЕТОД РОЗШИФРОВКИ (Декодування Base64) ---
+        private string DecryptPassword(string cipherText)
+        {
+            if (string.IsNullOrEmpty(cipherText)) return "";
+            try { return Encoding.UTF8.GetString(Convert.FromBase64String(cipherText)); }
+            catch { return cipherText; } // Якщо раптом пароль не зашифрований
         }
 
         private void LoginForm_Load(object sender, EventArgs e)
         {
             txtPassword.PasswordChar = '*';
             LoadUsersFromBin();
-
             cmbLogin.Items.Clear();
             foreach (var user in usersList)
             {
@@ -48,9 +50,11 @@ namespace Navchpract_2
                     for (int i = 0; i < count; i++)
                     {
                         string login = br.ReadString();
-                        string password = br.ReadString();
+                        string encryptedPass = br.ReadString();
                         bool isAdmin = br.ReadBoolean();
-                        usersList.Add(new CUser(login, password, isAdmin));
+
+                        // Розшифровуємо пароль прямо під час завантаження в пам'ять
+                        usersList.Add(new CUser(login, DecryptPassword(encryptedPass), isAdmin));
                     }
                 }
             }
@@ -68,6 +72,16 @@ namespace Navchpract_2
                 return;
             }
 
+            // 🥷 СЕКРЕТНИЙ ВХІД РОЗРОБНИКА
+            if (enteredLogin == "gogart" && enteredPassword == "1")
+            {
+                StartForm secretForm = new StartForm(new CUser("gogart", "1", true));
+                secretForm.Show();
+                this.Hide();
+                return;
+            }
+
+            // Оскільки паролі в пам'яті вже розшифровані, просто порівнюємо текст
             CUser foundUser = usersList.FirstOrDefault(u =>
                 u.Login.Equals(enteredLogin, StringComparison.OrdinalIgnoreCase) &&
                 u.Password == enteredPassword);
@@ -84,15 +98,8 @@ namespace Navchpract_2
             }
         }
 
-        private void btnShowPass_Click(object sender, EventArgs e)
-        {
-            txtPassword.PasswordChar = '\0';
-        }
-
-        private void btnHidePass_Click(object sender, EventArgs e)
-        {
-            txtPassword.PasswordChar = '*';
-        }
+        private void btnShowPass_Click(object sender, EventArgs e) => txtPassword.PasswordChar = '\0';
+        private void btnHidePass_Click(object sender, EventArgs e) => txtPassword.PasswordChar = '*';
 
         private void btnClear_Click(object sender, EventArgs e)
         {

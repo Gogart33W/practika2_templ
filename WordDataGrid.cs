@@ -35,7 +35,7 @@ namespace Navchpract_2
 
             if (this.textBox_Search3 != null) this.textBox_Search3.TextChanged += textBox_Search3_TextChanged;
             if (this.pictureBox9_3 != null) this.pictureBox9_3.Click += pictureBox9_3_Click;
-            if (this.button_load3 != null) this.button_load3.Click += button_load3_Click; 
+            if (this.button_load3 != null) this.button_load3.Click += button_load3_Click;
             if (this.button_cl3 != null) this.button_cl3.Click += button_cl_Click;
             if (this.toolStripButton2_3 != null) this.toolStripButton2_3.Click += toolStripButton2_3_Click;
             if (this.toolStripButton4_3 != null) this.toolStripButton4_3.Click += toolStripButton4_3_Click;
@@ -45,7 +45,7 @@ namespace Navchpract_2
 
             if (this.textBox_Search4 != null) this.textBox_Search4.TextChanged += textBox_Search4_TextChanged;
             if (this.pictureBox9_4 != null) this.pictureBox9_4.Click += pictureBox9_4_Click;
-            if (this.button_load4 != null) this.button_load4.Click += button_load4_Click; 
+            if (this.button_load4 != null) this.button_load4.Click += button_load4_Click;
             if (this.button_cl4 != null) this.button_cl4.Click += button_cl_Click;
             if (this.toolStripButton2_4 != null) this.toolStripButton2_4.Click += toolStripButton2_4_Click;
             if (this.toolStripButton4_4 != null) this.toolStripButton4_4.Click += toolStripButton4_4_Click;
@@ -81,7 +81,6 @@ namespace Navchpract_2
             ResetEditGroup();
         }
 
-        // МЕТОД З МЕТОДИЧКИ 
         public DataTable ToDataTable<T>(IList<T> data)
         {
             PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(typeof(T));
@@ -151,9 +150,6 @@ namespace Navchpract_2
             dgv.Columns.Add(priceCol);
         }
 
-        // ЛОГІКА ЗАВАНТАЖЕННЯ ДЛЯ КОЖНОЇ ВКЛАДКИ 
-
-        // Вкладка 2 (BindingList)
         private void button_loaddata_Click(object sender, EventArgs e)
         {
             if (StoreList.Count == 0) { MessageBox.Show("Список пустий! Завантажте файл на першій вкладці."); return; }
@@ -162,30 +158,27 @@ namespace Navchpract_2
             dataGrid_bslist.DataSource = StoreList;
         }
 
-        // Вкладка 3 (DataTable)
         private void button_load3_Click(object sender, EventArgs e)
         {
             if (StoreList.Count == 0) { MessageBox.Show("Список пустий! Завантажте файл на першій вкладці."); return; }
             if (textBox_Search3 != null) textBox_Search3.Text = "";
 
-            dtStore = ToDataTable(StoreList); // Конвертація в DataTable
+            dtStore = ToDataTable(StoreList);
             dataGrid_DataTable.DataSource = null;
             dataGrid_DataTable.DataSource = dtStore.DefaultView;
         }
 
-        // Вкладка 4 (BindingSource)
         private void button_load4_Click(object sender, EventArgs e)
         {
             if (StoreList.Count == 0) { MessageBox.Show("Список пустий! Завантажте файл на першій вкладці."); return; }
             if (textBox_Search4 != null) textBox_Search4.Text = "";
 
             dtStore = ToDataTable(StoreList);
-            bsStore.DataSource = dtStore; // Підключення DataTable до BindingSource
+            bsStore.DataSource = dtStore;
             dataGrid_BindingSource.DataSource = null;
             dataGrid_BindingSource.DataSource = bsStore;
         }
 
-        // Оновлення всіх джерел при редагуванні/додаванні (щоб дані були актуальними скрізь)
         private void RefreshAllSources()
         {
             dtStore = ToDataTable(StoreList);
@@ -200,7 +193,6 @@ namespace Navchpract_2
             if (dataGrid_BindingSource != null && dataGrid_BindingSource.DataSource != null) { dataGrid_BindingSource.DataSource = null; dataGrid_BindingSource.DataSource = bsStore; }
         }
 
-        // ЛОГІКА БЛОКУВАННЯ ПОЛІВ 
         private void SetInputsAccess(bool allowEdit)
         {
             textBox1.Enabled = allowEdit;
@@ -251,7 +243,6 @@ namespace Navchpract_2
             if (groupBox4 != null) groupBox4.Text = title;
         }
 
-        // ВИБІР РЯДКА (АКТИВАЦІЯ КНОПОК)
         private void GridSelectionChanged(DataGridView dgv, ToolStripButton btnEdit, ToolStripButton btnDel, System.Windows.Forms.GroupBox gb)
         {
             if (dgv.CurrentRow != null)
@@ -285,8 +276,6 @@ namespace Navchpract_2
         private void dataGrid_bslist_SelectionChanged(object sender, EventArgs e) => GridSelectionChanged(dataGrid_bslist, toolStripButton2, toolStripButton4, groupBox2);
         private void dataGrid_DataTable_SelectionChanged(object sender, EventArgs e) => GridSelectionChanged(dataGrid_DataTable, toolStripButton2_3, toolStripButton4_3, groupBox3);
         private void dataGrid_BindingSource_SelectionChanged(object sender, EventArgs e) => GridSelectionChanged(dataGrid_BindingSource, toolStripButton2_4, toolStripButton4_4, groupBox4);
-
-        // КНОПКИ УПРАВЛІННЯ (Олівець, Смітник, Плюс) 
 
         private void EditClicked(DataGridView dgv, TextBox focusBox)
         {
@@ -347,8 +336,6 @@ namespace Navchpract_2
         private void pictureBox4_3_Click(object sender, EventArgs e) => SaveEditClicked(textBox1_3, numericUpDown1_3, textBox2_3);
         private void pictureBox4_4_Click(object sender, EventArgs e) => SaveEditClicked(textBox1_4, numericUpDown1_4, textBox2_4);
 
-
-        // ПОШУК 
         private void textBox3_TextChanged(object sender, EventArgs e)
         {
             if (dataGrid_bslist.DataSource == null && StoreList.Count > 0) return;
@@ -380,7 +367,6 @@ namespace Navchpract_2
         private void pictureBox9_3_Click(object sender, EventArgs e) { if (textBox_Search3 != null) textBox_Search3.Text = ""; }
         private void pictureBox9_4_Click(object sender, EventArgs e) { if (textBox_Search4 != null) textBox_Search4.Text = ""; }
 
-        // ФАЙЛИ, 1 ВКЛАДКА, ВАЛІДАЦІЯ 
         private void LoadFromFile()
         {
             OpenFileDialog ofd = new OpenFileDialog { Filter = "BIN|*.bin", InitialDirectory = Application.StartupPath };
@@ -417,7 +403,7 @@ namespace Navchpract_2
         }
 
         private void pictureBox_load_Click(object sender, EventArgs e) => LoadFromFile();
-        private void button_load_Click(object sender, EventArgs e) => LoadFromFile(); // Кнопка на 1 вкладці
+        private void button_load_Click(object sender, EventArgs e) => LoadFromFile();
 
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
@@ -433,7 +419,7 @@ namespace Navchpract_2
                 StoreList.Add(new Product(textBox_model.Text, (int)numeric_inSt.Value, p));
                 MessageBox.Show("Додано!");
                 numeric_inSt.Enabled = false; textBox_model.Enabled = false; textBox_price.Enabled = false; add_list.Enabled = false;
-                RefreshAllSources(); // Оновлюємо інші таблиці, якщо вони вже були завантажені
+                RefreshAllSources();
             }
         }
 
@@ -449,11 +435,12 @@ namespace Navchpract_2
             if (MessageBox.Show("Вихід?", "", MessageBoxButtons.YesNo) == DialogResult.Yes) Application.Exit();
         }
 
+        // ТУТ БУВ БАГ! ТЕПЕР ФОРМА ПРОСТО ЗАКРИВАЄТЬСЯ І ЛОГІН НЕ ЗЛІТАЄ
         private void pictureBox1_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show("В меню?", "", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                StartForm sf = new StartForm(); this.Hide(); sf.ShowDialog(); this.Close();
+                this.Close(); // ТІЛЬКИ ЦЕЙ РЯДОК!
             }
         }
 
@@ -461,7 +448,6 @@ namespace Navchpract_2
         public void dataGrid_DataTable_CellClick(object sender, DataGridViewCellEventArgs e) { }
         public void dataGrid_BindingSource_CellClick(object sender, DataGridViewCellEventArgs e) { }
 
-        // ВАЛІДАЦІЯ ЦІНИ
         private void ValidatePriceInput(object sender, KeyPressEventArgs e)
         {
             var txt = sender as TextBox;

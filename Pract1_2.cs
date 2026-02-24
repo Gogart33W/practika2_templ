@@ -23,14 +23,11 @@ namespace Navchpract_2
 
         private void button_ToStartForm_Click(object sender, EventArgs e)
         {
-            DialogResult rez = MessageBox.Show("Чи дійсно Ви бажаєте перейти на стартову форму?", "Запитання",
+            DialogResult rez = MessageBox.Show("Чи дійсно Ви бажаєте повернутися в меню?", "Запитання",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (rez == DialogResult.Yes)
             {
-                this.TopMost = true;
-                StartForm sf = new StartForm();
-                this.Hide();
-                sf.ShowDialog();
+                this.Close(); // ТІЛЬКИ ЦЕЙ РЯДОК!
             }
         }
 

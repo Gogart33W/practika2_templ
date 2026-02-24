@@ -43,13 +43,11 @@ namespace Navchpract_2
 
         private void pictureBox_Exit_Click(object sender, EventArgs e)
         {
-            DialogResult rez = MessageBox.Show("Повернутися на головну форму?", "Запитання",
+            DialogResult rez = MessageBox.Show("Повернутися на попередню форму?", "Запитання",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (rez == DialogResult.Yes)
             {
-                this.Close();
-                foreach (Form f in Application.OpenForms)
-                    if (f is Pract1_2) f.Show();
+                this.Close(); 
             }
         }
     }
