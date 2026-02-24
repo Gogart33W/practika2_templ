@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{16D7467D-0A1E-4D2A-89AB-6FA19714637C}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>Navchpract_2</RootNamespace>
+    <AssemblyName>Navchpract#2</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AdminForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AdminForm.Designer.cs">
+      <DependentUpon>AdminForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CUser.cs" />
+    <Compile Include="Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="IndZavd1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="IndZavd1.Designer.cs">
+      <DependentUpon>IndZavd1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LoginForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LoginForm.Designer.cs">
+      <DependentUpon>LoginForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ModalForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ModalForm.Designer.cs">
+      <DependentUpon>ModalForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MyClass.cs" />
+    <Compile Include="NoModalForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NoModalForm.Designer.cs">
+      <DependentUpon>NoModalForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pract1_2.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pract1_2.Designer.cs">
+      <DependentUpon>Pract1_2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Product.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RealEstate.cs" />
+    <Compile Include="StartForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="StartForm.Designer.cs">
+      <DependentUpon>StartForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WordDataGrid.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WordDataGrid.Designer.cs">
+      <DependentUpon>WordDataGrid.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="AdminForm.resx">
+      <DependentUpon>AdminForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="IndZavd1.resx">
+      <DependentUpon>IndZavd1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LoginForm.resx">
+      <DependentUpon>LoginForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ModalForm.resx">
+      <DependentUpon>ModalForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NoModalForm.resx">
+      <DependentUpon>NoModalForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pract1_2.resx">
+      <DependentUpon>Pract1_2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Include="StartForm.resx">
+      <DependentUpon>StartForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WordDataGrid.resx">
+      <DependentUpon>WordDataGrid.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\free-icon-close-1828665.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\free-icon-start-5199939.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\free-icon-eraser-3894589.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\free-icon-eraser-38945891.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\free-icon-colour-7168567.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\free-icon-text-font-73425.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\free-icon-back-130882.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\free-icon-window-14062773.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\images.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\save.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\images.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\images-removebg-preview.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\62124.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pngtree-blue-checkmark-badge-for-verification-and-approval-png-image_15758927.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pngtree-blue-checkmark-badge-for-verification-and-approval-png-image_15758927-removebg-preview.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\png-clipart-computer-icons-checkbox-check-mark-button-angle-text-removebg-preview.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\imagesуку-removebg-preview.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\png-transparent-computer-icons-filter-filter-icon-angle-text-triangle.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\png-transparent-computer-icons-filter-filter-icon-angle-text-triangle-removebg-preview.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\clear-filter_6159408.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\filter_3661449.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\interface_edit_pencil_writing_school_eraser_icon_133002.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\interface_edit_pencil_writing_school_eraser_icon_1330021.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\eraser_icon_173850.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Home3_37171.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
