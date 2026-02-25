@@ -59,10 +59,6 @@
             this.lblEditPassword = new System.Windows.Forms.Label();
             this.lblEditLogin = new System.Windows.Forms.Label();
             this.lblSelectUser = new System.Windows.Forms.Label();
-            this.gbAllUsers = new System.Windows.Forms.GroupBox();
-            this.btnClearAllUsers = new System.Windows.Forms.Button();
-            this.btnShowAllUsers = new System.Windows.Forms.Button();
-            this.listBoxAllUsersGray = new System.Windows.Forms.ListBox();
             this.panelTop.SuspendLayout();
             this.tabControlMain.SuspendLayout();
             this.tabPageAdd.SuspendLayout();
@@ -73,7 +69,6 @@
             this.gbEditList.SuspendLayout();
             this.gbEditUser.SuspendLayout();
             this.toolStrip1.SuspendLayout();
-            this.gbAllUsers.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelTop
@@ -151,10 +146,10 @@
             // 
             // btnClearBin
             // 
-            this.btnClearBin.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F);
-            this.btnClearBin.Location = new System.Drawing.Point(200, 90);
+            this.btnClearBin.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.btnClearBin.Location = new System.Drawing.Point(165, 360);
             this.btnClearBin.Name = "btnClearBin";
-            this.btnClearBin.Size = new System.Drawing.Size(110, 40);
+            this.btnClearBin.Size = new System.Drawing.Size(140, 45);
             this.btnClearBin.TabIndex = 2;
             this.btnClearBin.Text = "Очистити";
             this.btnClearBin.UseVisualStyleBackColor = true;
@@ -162,10 +157,10 @@
             // 
             // btnLoadBin
             // 
-            this.btnLoadBin.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F);
-            this.btnLoadBin.Location = new System.Drawing.Point(200, 40);
+            this.btnLoadBin.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.btnLoadBin.Location = new System.Drawing.Point(15, 360);
             this.btnLoadBin.Name = "btnLoadBin";
-            this.btnLoadBin.Size = new System.Drawing.Size(110, 40);
+            this.btnLoadBin.Size = new System.Drawing.Size(140, 45);
             this.btnLoadBin.TabIndex = 1;
             this.btnLoadBin.Text = "Завантажити";
             this.btnLoadBin.UseVisualStyleBackColor = true;
@@ -173,12 +168,13 @@
             // 
             // listBoxBin
             // 
-            this.listBoxBin.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F);
+            this.listBoxBin.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.listBoxBin.FormattingEnabled = true;
-            this.listBoxBin.ItemHeight = 16;
-            this.listBoxBin.Location = new System.Drawing.Point(15, 35);
+            this.listBoxBin.IntegralHeight = false;
+            this.listBoxBin.ItemHeight = 20;
+            this.listBoxBin.Location = new System.Drawing.Point(15, 30);
             this.listBoxBin.Name = "listBoxBin";
-            this.listBoxBin.Size = new System.Drawing.Size(175, 372);
+            this.listBoxBin.Size = new System.Drawing.Size(290, 315);
             this.listBoxBin.TabIndex = 0;
             // 
             // gbTxtList
@@ -195,12 +191,13 @@
             // listBoxTxt
             // 
             this.listBoxTxt.BackColor = System.Drawing.Color.PaleGreen;
-            this.listBoxTxt.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F);
+            this.listBoxTxt.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.listBoxTxt.FormattingEnabled = true;
-            this.listBoxTxt.ItemHeight = 16;
-            this.listBoxTxt.Location = new System.Drawing.Point(15, 35);
+            this.listBoxTxt.IntegralHeight = false;
+            this.listBoxTxt.ItemHeight = 20;
+            this.listBoxTxt.Location = new System.Drawing.Point(15, 30);
             this.listBoxTxt.Name = "listBoxTxt";
-            this.listBoxTxt.Size = new System.Drawing.Size(270, 372);
+            this.listBoxTxt.Size = new System.Drawing.Size(270, 375);
             this.listBoxTxt.TabIndex = 0;
             // 
             // gbAddUser
@@ -223,22 +220,22 @@
             // btnSaveBin
             // 
             this.btnSaveBin.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.btnSaveBin.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F);
-            this.btnSaveBin.Location = new System.Drawing.Point(150, 350);
+            this.btnSaveBin.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.btnSaveBin.Location = new System.Drawing.Point(155, 360);
             this.btnSaveBin.Name = "btnSaveBin";
-            this.btnSaveBin.Size = new System.Drawing.Size(120, 50);
+            this.btnSaveBin.Size = new System.Drawing.Size(130, 45);
             this.btnSaveBin.TabIndex = 6;
-            this.btnSaveBin.Text = "Запис в бінарний файл";
+            this.btnSaveBin.Text = "Запис в BIN";
             this.btnSaveBin.UseVisualStyleBackColor = false;
             this.btnSaveBin.Click += new System.EventHandler(this.btnSaveBin_Click);
             // 
             // btnRegister
             // 
             this.btnRegister.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.btnRegister.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F);
-            this.btnRegister.Location = new System.Drawing.Point(20, 350);
+            this.btnRegister.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.btnRegister.Location = new System.Drawing.Point(15, 360);
             this.btnRegister.Name = "btnRegister";
-            this.btnRegister.Size = new System.Drawing.Size(120, 50);
+            this.btnRegister.Size = new System.Drawing.Size(130, 45);
             this.btnRegister.TabIndex = 5;
             this.btnRegister.Text = "Зареєструвати";
             this.btnRegister.UseVisualStyleBackColor = false;
@@ -247,7 +244,7 @@
             // chkIsAdmin
             // 
             this.chkIsAdmin.AutoSize = true;
-            this.chkIsAdmin.Location = new System.Drawing.Point(20, 150);
+            this.chkIsAdmin.Location = new System.Drawing.Point(20, 200);
             this.chkIsAdmin.Name = "chkIsAdmin";
             this.chkIsAdmin.Size = new System.Drawing.Size(209, 22);
             this.chkIsAdmin.TabIndex = 4;
@@ -256,24 +253,24 @@
             // 
             // txtPassword
             // 
-            this.txtPassword.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.txtPassword.Location = new System.Drawing.Point(120, 95);
+            this.txtPassword.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.txtPassword.Location = new System.Drawing.Point(120, 128);
             this.txtPassword.Name = "txtPassword";
-            this.txtPassword.Size = new System.Drawing.Size(150, 24);
+            this.txtPassword.Size = new System.Drawing.Size(160, 27);
             this.txtPassword.TabIndex = 3;
             // 
             // txtLogin
             // 
-            this.txtLogin.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.txtLogin.Location = new System.Drawing.Point(120, 45);
+            this.txtLogin.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.txtLogin.Location = new System.Drawing.Point(120, 58);
             this.txtLogin.Name = "txtLogin";
-            this.txtLogin.Size = new System.Drawing.Size(150, 24);
+            this.txtLogin.Size = new System.Drawing.Size(160, 27);
             this.txtLogin.TabIndex = 2;
             // 
             // lblPassword
             // 
             this.lblPassword.AutoSize = true;
-            this.lblPassword.Location = new System.Drawing.Point(20, 100);
+            this.lblPassword.Location = new System.Drawing.Point(20, 133);
             this.lblPassword.Name = "lblPassword";
             this.lblPassword.Size = new System.Drawing.Size(67, 18);
             this.lblPassword.TabIndex = 1;
@@ -282,7 +279,7 @@
             // lblLogin
             // 
             this.lblLogin.AutoSize = true;
-            this.lblLogin.Location = new System.Drawing.Point(20, 50);
+            this.lblLogin.Location = new System.Drawing.Point(20, 63);
             this.lblLogin.Name = "lblLogin";
             this.lblLogin.Size = new System.Drawing.Size(49, 18);
             this.lblLogin.TabIndex = 0;
@@ -293,7 +290,6 @@
             this.tabPageEdit.BackColor = System.Drawing.Color.Aquamarine;
             this.tabPageEdit.Controls.Add(this.gbEditList);
             this.tabPageEdit.Controls.Add(this.gbEditUser);
-            this.tabPageEdit.Controls.Add(this.gbAllUsers);
             this.tabPageEdit.Location = new System.Drawing.Point(4, 25);
             this.tabPageEdit.Name = "tabPageEdit";
             this.tabPageEdit.Padding = new System.Windows.Forms.Padding(3);
@@ -306,9 +302,9 @@
             this.gbEditList.Controls.Add(this.btnLoadEditList);
             this.gbEditList.Controls.Add(this.listBoxEditUsers);
             this.gbEditList.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
-            this.gbEditList.Location = new System.Drawing.Point(730, 20);
+            this.gbEditList.Location = new System.Drawing.Point(540, 30);
             this.gbEditList.Name = "gbEditList";
-            this.gbEditList.Size = new System.Drawing.Size(250, 420);
+            this.gbEditList.Size = new System.Drawing.Size(340, 400);
             this.gbEditList.TabIndex = 2;
             this.gbEditList.TabStop = false;
             this.gbEditList.Text = "Список користувачів";
@@ -316,24 +312,25 @@
             // btnLoadEditList
             // 
             this.btnLoadEditList.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.btnLoadEditList.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F);
-            this.btnLoadEditList.Location = new System.Drawing.Point(15, 370);
+            this.btnLoadEditList.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.btnLoadEditList.Location = new System.Drawing.Point(20, 335);
             this.btnLoadEditList.Name = "btnLoadEditList";
-            this.btnLoadEditList.Size = new System.Drawing.Size(220, 40);
+            this.btnLoadEditList.Size = new System.Drawing.Size(300, 50);
             this.btnLoadEditList.TabIndex = 1;
-            this.btnLoadEditList.Text = "Завантажити";
+            this.btnLoadEditList.Text = "Завантажити дані з файлу";
             this.btnLoadEditList.UseVisualStyleBackColor = false;
             this.btnLoadEditList.Click += new System.EventHandler(this.btnLoadEditList_Click);
             // 
             // listBoxEditUsers
             // 
             this.listBoxEditUsers.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.listBoxEditUsers.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F);
+            this.listBoxEditUsers.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.listBoxEditUsers.FormattingEnabled = true;
-            this.listBoxEditUsers.ItemHeight = 16;
-            this.listBoxEditUsers.Location = new System.Drawing.Point(15, 35);
+            this.listBoxEditUsers.IntegralHeight = false;
+            this.listBoxEditUsers.ItemHeight = 20;
+            this.listBoxEditUsers.Location = new System.Drawing.Point(20, 30);
             this.listBoxEditUsers.Name = "listBoxEditUsers";
-            this.listBoxEditUsers.Size = new System.Drawing.Size(220, 324);
+            this.listBoxEditUsers.Size = new System.Drawing.Size(300, 290);
             this.listBoxEditUsers.TabIndex = 0;
             this.listBoxEditUsers.SelectedIndexChanged += new System.EventHandler(this.listBoxEditUsers_SelectedIndexChanged);
             // 
@@ -351,9 +348,9 @@
             this.gbEditUser.Controls.Add(this.lblEditLogin);
             this.gbEditUser.Controls.Add(this.lblSelectUser);
             this.gbEditUser.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
-            this.gbEditUser.Location = new System.Drawing.Point(360, 20);
+            this.gbEditUser.Location = new System.Drawing.Point(120, 30);
             this.gbEditUser.Name = "gbEditUser";
-            this.gbEditUser.Size = new System.Drawing.Size(350, 420);
+            this.gbEditUser.Size = new System.Drawing.Size(400, 400);
             this.gbEditUser.TabIndex = 1;
             this.gbEditUser.TabStop = false;
             this.gbEditUser.Text = "Редагування користувача";
@@ -372,7 +369,7 @@
             this.tsBtnDelete});
             this.toolStrip1.Location = new System.Drawing.Point(3, 20);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(344, 27);
+            this.toolStrip1.Size = new System.Drawing.Size(394, 27);
             this.toolStrip1.TabIndex = 11;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -392,7 +389,7 @@
             this.tsBtnClear.Size = new System.Drawing.Size(29, 24);
             this.tsBtnClear.Text = "📝";
             this.tsBtnClear.ToolTipText = "Очистити поля";
-            //this.tsBtnClear.Click += new System.EventHandler(this.ClearEditFields);
+            this.tsBtnClear.Click += new System.EventHandler(this.tsBtnClear_Click);
             // 
             // toolStripSeparator1
             // 
@@ -435,9 +432,9 @@
             // 
             this.btnSavePassword.BackColor = System.Drawing.Color.LightSkyBlue;
             this.btnSavePassword.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSavePassword.Location = new System.Drawing.Point(280, 160);
+            this.btnSavePassword.Location = new System.Drawing.Point(340, 226);
             this.btnSavePassword.Name = "btnSavePassword";
-            this.btnSavePassword.Size = new System.Drawing.Size(30, 30);
+            this.btnSavePassword.Size = new System.Drawing.Size(35, 30);
             this.btnSavePassword.TabIndex = 10;
             this.btnSavePassword.Text = "💾";
             this.btnSavePassword.UseVisualStyleBackColor = false;
@@ -447,9 +444,9 @@
             // 
             this.btnSaveLogin.BackColor = System.Drawing.Color.LightSkyBlue;
             this.btnSaveLogin.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSaveLogin.Location = new System.Drawing.Point(280, 110);
+            this.btnSaveLogin.Location = new System.Drawing.Point(340, 156);
             this.btnSaveLogin.Name = "btnSaveLogin";
-            this.btnSaveLogin.Size = new System.Drawing.Size(30, 30);
+            this.btnSaveLogin.Size = new System.Drawing.Size(35, 30);
             this.btnSaveLogin.TabIndex = 9;
             this.btnSaveLogin.Text = "💾";
             this.btnSaveLogin.UseVisualStyleBackColor = false;
@@ -460,9 +457,9 @@
             this.btnDeleteUser.BackColor = System.Drawing.Color.Tomato;
             this.btnDeleteUser.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDeleteUser.ForeColor = System.Drawing.Color.White;
-            this.btnDeleteUser.Location = new System.Drawing.Point(280, 60);
+            this.btnDeleteUser.Location = new System.Drawing.Point(340, 85);
             this.btnDeleteUser.Name = "btnDeleteUser";
-            this.btnDeleteUser.Size = new System.Drawing.Size(30, 30);
+            this.btnDeleteUser.Size = new System.Drawing.Size(35, 30);
             this.btnDeleteUser.TabIndex = 7;
             this.btnDeleteUser.Text = "X";
             this.btnDeleteUser.UseVisualStyleBackColor = false;
@@ -471,18 +468,18 @@
             // cmbEditSelectUser
             // 
             this.cmbEditSelectUser.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbEditSelectUser.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.cmbEditSelectUser.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.cmbEditSelectUser.FormattingEnabled = true;
-            this.cmbEditSelectUser.Location = new System.Drawing.Point(130, 62);
+            this.cmbEditSelectUser.Location = new System.Drawing.Point(140, 87);
             this.cmbEditSelectUser.Name = "cmbEditSelectUser";
-            this.cmbEditSelectUser.Size = new System.Drawing.Size(140, 26);
+            this.cmbEditSelectUser.Size = new System.Drawing.Size(190, 28);
             this.cmbEditSelectUser.TabIndex = 6;
             this.cmbEditSelectUser.SelectedIndexChanged += new System.EventHandler(this.cmbEditSelectUser_SelectedIndexChanged);
             // 
             // chkEditIsAdmin
             // 
             this.chkEditIsAdmin.AutoSize = true;
-            this.chkEditIsAdmin.Location = new System.Drawing.Point(20, 220);
+            this.chkEditIsAdmin.Location = new System.Drawing.Point(30, 300);
             this.chkEditIsAdmin.Name = "chkEditIsAdmin";
             this.chkEditIsAdmin.Size = new System.Drawing.Size(209, 22);
             this.chkEditIsAdmin.TabIndex = 5;
@@ -491,24 +488,24 @@
             // 
             // txtEditPassword
             // 
-            this.txtEditPassword.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.txtEditPassword.Location = new System.Drawing.Point(130, 163);
+            this.txtEditPassword.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.txtEditPassword.Location = new System.Drawing.Point(140, 227);
             this.txtEditPassword.Name = "txtEditPassword";
-            this.txtEditPassword.Size = new System.Drawing.Size(140, 24);
+            this.txtEditPassword.Size = new System.Drawing.Size(190, 27);
             this.txtEditPassword.TabIndex = 4;
             // 
             // txtEditLogin
             // 
-            this.txtEditLogin.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.txtEditLogin.Location = new System.Drawing.Point(130, 113);
+            this.txtEditLogin.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.txtEditLogin.Location = new System.Drawing.Point(140, 157);
             this.txtEditLogin.Name = "txtEditLogin";
-            this.txtEditLogin.Size = new System.Drawing.Size(140, 24);
+            this.txtEditLogin.Size = new System.Drawing.Size(190, 27);
             this.txtEditLogin.TabIndex = 3;
             // 
             // lblEditPassword
             // 
             this.lblEditPassword.AutoSize = true;
-            this.lblEditPassword.Location = new System.Drawing.Point(20, 166);
+            this.lblEditPassword.Location = new System.Drawing.Point(30, 232);
             this.lblEditPassword.Name = "lblEditPassword";
             this.lblEditPassword.Size = new System.Drawing.Size(67, 18);
             this.lblEditPassword.TabIndex = 2;
@@ -517,7 +514,7 @@
             // lblEditLogin
             // 
             this.lblEditLogin.AutoSize = true;
-            this.lblEditLogin.Location = new System.Drawing.Point(20, 116);
+            this.lblEditLogin.Location = new System.Drawing.Point(30, 162);
             this.lblEditLogin.Name = "lblEditLogin";
             this.lblEditLogin.Size = new System.Drawing.Size(49, 18);
             this.lblEditLogin.TabIndex = 1;
@@ -526,59 +523,11 @@
             // lblSelectUser
             // 
             this.lblSelectUser.AutoSize = true;
-            this.lblSelectUser.Location = new System.Drawing.Point(20, 65);
+            this.lblSelectUser.Location = new System.Drawing.Point(30, 92);
             this.lblSelectUser.Name = "lblSelectUser";
             this.lblSelectUser.Size = new System.Drawing.Size(100, 18);
             this.lblSelectUser.TabIndex = 0;
             this.lblSelectUser.Text = "Користувач";
-            // 
-            // gbAllUsers
-            // 
-            this.gbAllUsers.Controls.Add(this.btnClearAllUsers);
-            this.gbAllUsers.Controls.Add(this.btnShowAllUsers);
-            this.gbAllUsers.Controls.Add(this.listBoxAllUsersGray);
-            this.gbAllUsers.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
-            this.gbAllUsers.Location = new System.Drawing.Point(20, 20);
-            this.gbAllUsers.Name = "gbAllUsers";
-            this.gbAllUsers.Size = new System.Drawing.Size(330, 420);
-            this.gbAllUsers.TabIndex = 0;
-            this.gbAllUsers.TabStop = false;
-            this.gbAllUsers.Text = "Користувачі";
-            // 
-            // btnClearAllUsers
-            // 
-            this.btnClearAllUsers.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.btnClearAllUsers.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F);
-            this.btnClearAllUsers.Location = new System.Drawing.Point(120, 370);
-            this.btnClearAllUsers.Name = "btnClearAllUsers";
-            this.btnClearAllUsers.Size = new System.Drawing.Size(100, 40);
-            this.btnClearAllUsers.TabIndex = 2;
-            this.btnClearAllUsers.Text = "Очистити";
-            this.btnClearAllUsers.UseVisualStyleBackColor = false;
-            this.btnClearAllUsers.Click += new System.EventHandler(this.btnClearAllUsers_Click);
-            // 
-            // btnShowAllUsers
-            // 
-            this.btnShowAllUsers.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.btnShowAllUsers.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F);
-            this.btnShowAllUsers.Location = new System.Drawing.Point(15, 370);
-            this.btnShowAllUsers.Name = "btnShowAllUsers";
-            this.btnShowAllUsers.Size = new System.Drawing.Size(100, 40);
-            this.btnShowAllUsers.TabIndex = 1;
-            this.btnShowAllUsers.Text = "Показати";
-            this.btnShowAllUsers.UseVisualStyleBackColor = false;
-            this.btnShowAllUsers.Click += new System.EventHandler(this.btnShowAllUsers_Click);
-            // 
-            // listBoxAllUsersGray
-            // 
-            this.listBoxAllUsersGray.BackColor = System.Drawing.Color.DarkGray;
-            this.listBoxAllUsersGray.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.listBoxAllUsersGray.FormattingEnabled = true;
-            this.listBoxAllUsersGray.ItemHeight = 18;
-            this.listBoxAllUsersGray.Location = new System.Drawing.Point(15, 35);
-            this.listBoxAllUsersGray.Name = "listBoxAllUsersGray";
-            this.listBoxAllUsersGray.Size = new System.Drawing.Size(300, 310);
-            this.listBoxAllUsersGray.TabIndex = 0;
             // 
             // AdminForm
             // 
@@ -605,13 +554,12 @@
             this.gbEditUser.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
-            this.gbAllUsers.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
-        // ... (Тут іде весь попередній список змінних, я додав туди ToolStrip та нові кнопки)
+
         private System.Windows.Forms.Panel panelTop;
         private System.Windows.Forms.Button btnCloseForm;
         private System.Windows.Forms.Button btnGoToStart;
@@ -646,10 +594,6 @@
         private System.Windows.Forms.Label lblEditPassword;
         private System.Windows.Forms.Label lblEditLogin;
         private System.Windows.Forms.Label lblSelectUser;
-        private System.Windows.Forms.GroupBox gbAllUsers;
-        private System.Windows.Forms.Button btnClearAllUsers;
-        private System.Windows.Forms.Button btnShowAllUsers;
-        private System.Windows.Forms.ListBox listBoxAllUsersGray;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripButton tsBtnRefresh;
         private System.Windows.Forms.ToolStripButton tsBtnClear;

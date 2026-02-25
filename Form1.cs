@@ -32,7 +32,7 @@ namespace Navchpract_2
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
             if (rez == DialogResult.Yes)
             {
-                this.Close(); // ТІЛЬКИ ЦЕЙ РЯДОК!
+                this.Close(); 
             }
         }
 

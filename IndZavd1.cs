@@ -49,7 +49,7 @@ namespace Navchpract_2
             if (dgvData.Columns["Price"] != null) dgvData.Columns["Price"].HeaderText = "Ціна ($)";
             if (dgvData.Columns["OwnerName"] != null) dgvData.Columns["OwnerName"].HeaderText = "Власник";
 
-            // --- КРАСИВІ ЧИСЛА ТА ОБМЕЖЕННЯ (ФІКС ДЛЯ < 1) ---
+            // --- КРАСИВІ ЧИСЛА ТА ОБМЕЖЕННЯ ---
             numRooms.DecimalPlaces = 0; numRooms.Minimum = 1; numRooms.Maximum = 100;
             numArea.DecimalPlaces = 2; numArea.Minimum = 0.01m; numArea.Maximum = 10000;
             numPrice.DecimalPlaces = 2; numPrice.Minimum = 0.01m; numPrice.Maximum = 100000000;
@@ -173,7 +173,7 @@ namespace Navchpract_2
             }
         }
 
-        // --- ЛОГІКА ПОШУКУ (ФАНТОМ ТА КРАПКИ) ---
+        // --- ЛОГІКА ПОШУКУ  ---
         private void TxtSearch_Enter(object sender, EventArgs e)
         {
             if (txtSearch.Text == searchPlaceholder)
@@ -315,7 +315,6 @@ namespace Navchpract_2
         // --- CRUD ЛОГІКА ---
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            // Перед додаванням примусово фокусуємось на кнопці, щоб зберегти значення полів вводу
             btnAdd.Focus();
 
             if (!ValidateInputs()) return;

@@ -35,3 +35,14 @@ D:\Study\Kyrop\practika 2\practika 2\Navchpract#2\Navchpract#2\obj\Debug\Navchpr
 D:\Study\Kyrop\practika 2\practika 2\Navchpract#2\Navchpract#2\bin\Debug\Navchpract#2.exe.config
 D:\Study\Kyrop\practika 2\practika 2\Navchpract#2\Navchpract#2\bin\Debug\Navchpract#2.exe
 D:\Study\Kyrop\practika 2\practika 2\Navchpract#2\Navchpract#2\bin\Debug\Navchpract#2.pdb
+D:\Study\Kyrop\practika 2\practika 2\Navchpract#2\Navchpract#2\bin\Debug\BCrypt.Net-Next.dll
+D:\Study\Kyrop\practika 2\practika 2\Navchpract#2\Navchpract#2\bin\Debug\System.Buffers.dll
+D:\Study\Kyrop\practika 2\practika 2\Navchpract#2\Navchpract#2\bin\Debug\System.Memory.dll
+D:\Study\Kyrop\practika 2\practika 2\Navchpract#2\Navchpract#2\bin\Debug\System.Numerics.Vectors.dll
+D:\Study\Kyrop\practika 2\practika 2\Navchpract#2\Navchpract#2\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+D:\Study\Kyrop\practika 2\practika 2\Navchpract#2\Navchpract#2\bin\Debug\BCrypt.Net-Next.xml
+D:\Study\Kyrop\practika 2\practika 2\Navchpract#2\Navchpract#2\bin\Debug\System.Buffers.xml
+D:\Study\Kyrop\practika 2\practika 2\Navchpract#2\Navchpract#2\bin\Debug\System.Memory.xml
+D:\Study\Kyrop\practika 2\practika 2\Navchpract#2\Navchpract#2\bin\Debug\System.Numerics.Vectors.xml
+D:\Study\Kyrop\practika 2\practika 2\Navchpract#2\Navchpract#2\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
+D:\Study\Kyrop\practika 2\practika 2\Navchpract#2\Navchpract#2\obj\Debug\NavPract2.csproj.Up2Date

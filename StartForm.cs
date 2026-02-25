@@ -17,6 +17,10 @@ namespace Navchpract_2
             currentUser = user;
             this.Load += StartForm_Load;
             this.FormClosed += StartForm_FormClosed;
+
+            this.VisibleChanged += (s, e) => {
+                if (this.Visible) RefreshUserInfo();
+            };
         }
 
         public StartForm()
@@ -28,18 +32,32 @@ namespace Navchpract_2
             currentUser = new CUser("Адмін (Авто)", "1111", true);
             this.Load += StartForm_Load;
             this.FormClosed += StartForm_FormClosed;
+
+            this.VisibleChanged += (s, e) => {
+                if (this.Visible) RefreshUserInfo();
+            };
         }
 
-        private void StartForm_Load(object sender, EventArgs e)
+        private void RefreshUserInfo()
         {
             string role = currentUser.IsAdmin ? "Адміністратор" : "Юзер";
 
             if (this.Controls.ContainsKey("lblUserInfo"))
             {
                 this.Controls["lblUserInfo"].Text = $"Користувач: {currentUser.Login} ({role})";
-                // Центруємо напис
                 this.Controls["lblUserInfo"].Left = (this.ClientSize.Width - this.Controls["lblUserInfo"].Width) / 2;
             }
+
+            // 🥷 МАГІЯ: Тепер зникає ВСЯ ВКЛАДКА "Третій тиждень", а не тільки кнопка всередині
+            if (третійТижденьToolStripMenuItem != null)
+            {
+                третійТижденьToolStripMenuItem.Visible = currentUser.IsAdmin;
+            }
+        }
+
+        private void StartForm_Load(object sender, EventArgs e)
+        {
+            RefreshUserInfo();
         }
 
         private void StartForm_FormClosed(object sender, FormClosedEventArgs e)
@@ -71,20 +89,14 @@ namespace Navchpract_2
 
         private void практична31ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!currentUser.IsAdmin)
-            {
-                MessageBox.Show("Вибачте, але це тільки для адмінів!", "Доступ заборонено", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+            if (!currentUser.IsAdmin) return;
 
             this.Hide();
-
             using (AdminForm adminForm = new AdminForm(currentUser))
             {
                 adminForm.StartPosition = FormStartPosition.CenterScreen;
                 adminForm.ShowDialog();
             }
-
             this.Show();
         }
 

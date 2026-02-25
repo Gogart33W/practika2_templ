@@ -1,3 +1,2 @@
-Павло;NTU1NQ==;True
-Соня;NTQ1NA==;False
-Куропаткін;0YXQsNC60LXRgA==;True
+1;2qAtkMRaLJGte8aspGrDd7RfRmGLfO6FuPHL5NJ5MkYIlIVmbvF7qp72/UfrNWqs;False
+2;IgpmJ5MbL4+wJoWQImb5m8J4CKi44a4vtW/3A1mtjTTmYzhBh2MQoMi4Yy8YcHJR;False

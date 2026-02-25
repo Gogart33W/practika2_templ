@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Navchpract_2
@@ -17,19 +16,27 @@ namespace Navchpract_2
             InitializeComponent();
             this.StartPosition = FormStartPosition.CenterScreen;
             binPath = Path.Combine(Application.StartupPath, "input.bin");
-        }
 
-        // --- МЕТОД РОЗШИФРОВКИ (Декодування Base64) ---
-        private string DecryptPassword(string cipherText)
-        {
-            if (string.IsNullOrEmpty(cipherText)) return "";
-            try { return Encoding.UTF8.GetString(Convert.FromBase64String(cipherText)); }
-            catch { return cipherText; } // Якщо раптом пароль не зашифрований
+            if (cmbLogin != null)
+            {
+                cmbLogin.MaxDropDownItems = 5;
+                cmbLogin.IntegralHeight = false;
+            }
+
+            this.VisibleChanged += (s, e) =>
+            {
+                if (this.Visible) RefreshLoginList();
+            };
         }
 
         private void LoginForm_Load(object sender, EventArgs e)
         {
             txtPassword.PasswordChar = '*';
+            RefreshLoginList();
+        }
+
+        private void RefreshLoginList()
+        {
             LoadUsersFromBin();
             cmbLogin.Items.Clear();
             foreach (var user in usersList)
@@ -50,11 +57,9 @@ namespace Navchpract_2
                     for (int i = 0; i < count; i++)
                     {
                         string login = br.ReadString();
-                        string encryptedPass = br.ReadString();
+                        string hashPass = br.ReadString();
                         bool isAdmin = br.ReadBoolean();
-
-                        // Розшифровуємо пароль прямо під час завантаження в пам'ять
-                        usersList.Add(new CUser(login, DecryptPassword(encryptedPass), isAdmin));
+                        usersList.Add(new CUser(login, hashPass, isAdmin));
                     }
                 }
             }
@@ -72,7 +77,7 @@ namespace Navchpract_2
                 return;
             }
 
-            // 🥷 СЕКРЕТНИЙ ВХІД РОЗРОБНИКА
+            // СЕКРЕТНИЙ ВХІД РОЗРОБНИКА
             if (enteredLogin == "gogart" && enteredPassword == "1")
             {
                 StartForm secretForm = new StartForm(new CUser("gogart", "1", true));
@@ -81,16 +86,18 @@ namespace Navchpract_2
                 return;
             }
 
-            // Оскільки паролі в пам'яті вже розшифровані, просто порівнюємо текст
-            CUser foundUser = usersList.FirstOrDefault(u =>
-                u.Login.Equals(enteredLogin, StringComparison.OrdinalIgnoreCase) &&
-                u.Password == enteredPassword);
+            CUser foundUser = usersList.FirstOrDefault(u => u.Login.Equals(enteredLogin, StringComparison.OrdinalIgnoreCase));
 
-            if (foundUser != null)
+            // ВИКЛИКАЄМО НАШ НОВИЙ КЛАС ХЕШУВАННЯ
+            if (foundUser != null && CryptoHelper.VerifyPassword(enteredPassword, foundUser.Password))
             {
                 StartForm mainForm = new StartForm(foundUser);
                 mainForm.Show();
                 this.Hide();
+
+                cmbLogin.SelectedIndex = -1;
+                cmbLogin.Text = string.Empty;
+                txtPassword.Clear();
             }
             else
             {
