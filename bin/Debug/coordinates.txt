@@ -1,0 +1,15 @@
+markers.Add(new CountryMarker { Name = "Канада", MapX = 259f, MapY = 101f });
+markers.Add(new CountryMarker { Name = "США", MapX = 262f, MapY = 117f });
+markers.Add(new CountryMarker { Name = "Мексика", MapX = 189f, MapY = 156f });
+markers.Add(new CountryMarker { Name = "Бразилія", MapX = 335f, MapY = 274f });
+markers.Add(new CountryMarker { Name = "Британія", MapX = 470f, MapY = 85f });
+markers.Add(new CountryMarker { Name = "Франція", MapX = 477f, MapY = 96f });
+markers.Add(new CountryMarker { Name = "Німеччина", MapX = 506f, MapY = 87f });
+markers.Add(new CountryMarker { Name = "Україна", MapX = 556f, MapY = 89f });
+markers.Add(new CountryMarker { Name = "Італія", MapX = 504f, MapY = 109f });
+markers.Add(new CountryMarker { Name = "Єгипет", MapX = 556f, MapY = 144f });
+markers.Add(new CountryMarker { Name = "ПАР", MapX = 529f, MapY = 309f });
+markers.Add(new CountryMarker { Name = "Індія", MapX = 684f, MapY = 155f });
+markers.Add(new CountryMarker { Name = "Китай", MapX = 797f, MapY = 140f });
+markers.Add(new CountryMarker { Name = "Японія", MapX = 855f, MapY = 124f });
+markers.Add(new CountryMarker { Name = "Австралія", MapX = 874f, MapY = 310f });

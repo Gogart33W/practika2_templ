@@ -1,67 +1,152 @@
 ﻿using System;
-using System.Configuration; // для читання App.config
+using System.IO;
 using System.Security.Cryptography;
+using System.Text;
 
 namespace Navchpract_2
 {
     public static class CryptoHelper
     {
-        // 100 000 ітерацій для захисту від райдужних таблиць
-        private const int ITERATIONS = 100000;
+        private const int CURRENT_ITERATIONS = 200000;
+        private const int SALT_SIZE = 16;
+        private const int HASH_SIZE = 32;
 
-        // Отримуємо перець з App.config
-        private static string GetPepper()
+        private const string FORMAT_VERSION = "v1";
+        private const string ALGORITHM = "PBKDF2-SHA256";
+
+        private static readonly string PepperFilePath =
+            Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+                "Navchpract_2",
+                "pepper.dat");
+
+        public static string HashPassword(string password)
         {
-            string pepper = ConfigurationManager.AppSettings["SecurityPepper"];
+            byte[] salt = GenerateRandomBytes(SALT_SIZE);
 
-            if (string.IsNullOrEmpty(pepper))
-            {
-                throw new Exception("Критична помилка безпеки: 'SecurityPepper' не знайдено у файлі App.config! Зверніться до адміністратора.");
-            }
+            byte[] hash = Derive(password, salt, CURRENT_ITERATIONS);
 
-            return pepper;
+            return FORMAT_VERSION + "$" +
+                   ALGORITHM + "$" +
+                   CURRENT_ITERATIONS + "$" +
+                   Convert.ToBase64String(salt) + "$" +
+                   Convert.ToBase64String(hash);
         }
 
-        // --- МЕТОД ХЕШУВАННЯ ---
-        public static string HashPassword(string plainPassword)
+        public static bool VerifyPassword(string password, string storedValue, out string upgradedHash)
         {
-            string passwordWithPepper = plainPassword + GetPepper();
+            upgradedHash = null;
 
-            byte[] salt = new byte[16];
-            using (var rng = new RNGCryptoServiceProvider()) { rng.GetBytes(salt); }
-
-            using (var pbkdf2 = new Rfc2898DeriveBytes(passwordWithPepper, salt, ITERATIONS))
-            {
-                byte[] hash = pbkdf2.GetBytes(32);
-                byte[] hashBytes = new byte[48];
-                Array.Copy(salt, 0, hashBytes, 0, 16);
-                Array.Copy(hash, 0, hashBytes, 16, 32);
-                return Convert.ToBase64String(hashBytes);
-            }
-        }
-
-        // --- МЕТОД ПЕРЕВІРКИ ---
-        public static bool VerifyPassword(string plainPassword, string storedHash)
-        {
             try
             {
-                byte[] hashBytes = Convert.FromBase64String(storedHash);
-                byte[] salt = new byte[16];
-                Array.Copy(hashBytes, 0, salt, 0, 16);
+                string[] parts = storedValue.Split('$');
+                if (parts.Length != 5)
+                    return false;
 
-                string passwordWithPepper = plainPassword + GetPepper();
+                string version = parts[0];
+                string algorithm = parts[1];
+                int iterations = int.Parse(parts[2]);
 
-                using (var pbkdf2 = new Rfc2898DeriveBytes(passwordWithPepper, salt, ITERATIONS))
+                if (version != FORMAT_VERSION || algorithm != ALGORITHM)
+                    return false;
+
+                byte[] salt = Convert.FromBase64String(parts[3]);
+                byte[] storedHash = Convert.FromBase64String(parts[4]);
+
+                byte[] computedHash = Derive(password, salt, iterations);
+
+                if (!FixedTimeEquals(storedHash, computedHash))
+                    return false;
+
+                if (iterations < CURRENT_ITERATIONS)
                 {
-                    byte[] hash = pbkdf2.GetBytes(32);
-                    for (int i = 0; i < 32; i++)
-                    {
-                        if (hashBytes[i + 16] != hash[i]) return false;
-                    }
-                    return true;
+                    upgradedHash = HashPassword(password);
                 }
+
+                return true;
             }
-            catch { return false; }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private static byte[] Derive(string password, byte[] salt, int iterations)
+        {
+            using (var pbkdf2 = new Rfc2898DeriveBytes(
+                password + GetPepper(),
+                salt,
+                iterations,
+                HashAlgorithmName.SHA256))
+            {
+                return pbkdf2.GetBytes(HASH_SIZE);
+            }
+        }
+
+        private static bool FixedTimeEquals(byte[] a, byte[] b)
+        {
+            if (a.Length != b.Length)
+                return false;
+
+            int diff = 0;
+
+            for (int i = 0; i < a.Length; i++)
+            {
+                diff |= a[i] ^ b[i];
+            }
+
+            return diff == 0;
+        }
+
+        private static string GetPepper()
+        {
+            if (!File.Exists(PepperFilePath))
+                CreatePepper();
+
+            byte[] encrypted = File.ReadAllBytes(PepperFilePath);
+
+            byte[] decrypted = ProtectedData.Unprotect(
+                encrypted,
+                null,
+                DataProtectionScope.LocalMachine);
+
+            return Encoding.UTF8.GetString(decrypted);
+        }
+
+        private static void CreatePepper()
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(PepperFilePath));
+
+            byte[] pepper = GenerateRandomBytes(32);
+
+            byte[] encrypted = ProtectedData.Protect(
+                pepper,
+                null,
+                DataProtectionScope.LocalMachine);
+
+            File.WriteAllBytes(PepperFilePath, encrypted);
+        }
+
+        private static byte[] GenerateRandomBytes(int length)
+        {
+            byte[] bytes = new byte[length];
+
+            using (var rng = new RNGCryptoServiceProvider())
+            {
+                rng.GetBytes(bytes);
+            }
+
+            return bytes;
+        }
+
+        // МЕТОД ДЛЯ ТИМЧАСОВИХ ПАРОЛІВ (SHA1) 
+        public static string HashTempPasswordSHA1(string password)
+        {
+            using (SHA1 sha1 = SHA1.Create())
+            {
+                byte[] hashBytes = sha1.ComputeHash(Encoding.UTF8.GetBytes(password));
+                return Convert.ToBase64String(hashBytes);
+            }
         }
     }
 }

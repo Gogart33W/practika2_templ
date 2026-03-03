@@ -46,3 +46,8 @@ D:\Study\Kyrop\practika 2\practika 2\Navchpract#2\Navchpract#2\bin\Debug\System.
 D:\Study\Kyrop\practika 2\practika 2\Navchpract#2\Navchpract#2\bin\Debug\System.Numerics.Vectors.xml
 D:\Study\Kyrop\practika 2\practika 2\Navchpract#2\Navchpract#2\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
 D:\Study\Kyrop\practika 2\practika 2\Navchpract#2\Navchpract#2\obj\Debug\NavPract2.csproj.Up2Date
+D:\Study\Kyrop\practika 2\practika 2\Navchpract#2\Navchpract#2\bin\Debug\System.Security.Cryptography.ProtectedData.dll
+D:\Study\Kyrop\practika 2\practika 2\Navchpract#2\Navchpract#2\bin\Debug\System.Security.Cryptography.ProtectedData.xml
+D:\Study\Kyrop\practika 2\practika 2\Navchpract#2\Navchpract#2\obj\Debug\Navchpract_2.MapForm.resources
+D:\Study\Kyrop\practika 2\practika 2\Navchpract#2\Navchpract#2\obj\Debug\Navchpract_2.Session.resources
+D:\Study\Kyrop\practika 2\practika 2\Navchpract#2\Navchpract#2\obj\Debug\Navchpract_2.UserFeedForm.resources

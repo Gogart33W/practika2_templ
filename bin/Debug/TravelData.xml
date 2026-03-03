@@ -1,0 +1,75 @@
+<?xml version="1.0" standalone="yes"?>
+<NewDataSet>
+  <xs:schema id="NewDataSet" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xs:element name="NewDataSet" msdata:IsDataSet="true" msdata:MainDataTable="Travels" msdata:UseCurrentLocale="true">
+      <xs:complexType>
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+          <xs:element name="Travels">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="ID" msdata:AutoIncrement="true" type="xs:int" minOccurs="0" />
+                <xs:element name="Користувач" type="xs:string" minOccurs="0" />
+                <xs:element name="Країна" type="xs:string" minOccurs="0" />
+                <xs:element name="Місто" type="xs:string" minOccurs="0" />
+                <xs:element name="Бюджет" type="xs:decimal" minOccurs="0" />
+                <xs:element name="Статус" type="xs:string" minOccurs="0" />
+                <xs:element name="Оцінка" type="xs:int" minOccurs="0" />
+                <xs:element name="Коментар" type="xs:string" minOccurs="0" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+      </xs:complexType>
+    </xs:element>
+  </xs:schema>
+  <Travels>
+    <ID>0</ID>
+    <Користувач>2</Користувач>
+    <Країна>США</Країна>
+    <Місто>Берлян</Місто>
+    <Бюджет>10</Бюджет>
+    <Статус>Завершено</Статус>
+    <Оцінка>3</Оцінка>
+    <Коментар>не рекомендую це не Берлін а якесь село... пива не було.(</Коментар>
+  </Travels>
+  <Travels>
+    <ID>1</ID>
+    <Користувач>2</Користувач>
+    <Країна>Бразилія</Країна>
+    <Місто>Карлчн</Місто>
+    <Бюджет>15.90</Бюджет>
+    <Статус>Завершено</Статус>
+    <Оцінка>10</Оцінка>
+    <Коментар>РЕКОМЕНДУЮ!!!</Коментар>
+  </Travels>
+  <Travels>
+    <ID>2</ID>
+    <Користувач>3</Користувач>
+    <Країна>Канада</Країна>
+    <Місто>Оттава</Місто>
+    <Бюджет>17</Бюджет>
+    <Статус>Завершено</Статус>
+    <Оцінка>7</Оцінка>
+    <Коментар>не рекомендую заставляють їсти блини з кленовим сиропом..</Коментар>
+  </Travels>
+  <Travels>
+    <ID>3</ID>
+    <Користувач>4</Користувач>
+    <Країна>Мексика</Країна>
+    <Місто>Колінвал</Місто>
+    <Бюджет>17.25</Бюджет>
+    <Статус>Планується</Статус>
+    <Оцінка>1</Оцінка>
+    <Коментар />
+  </Travels>
+  <Travels>
+    <ID>4</ID>
+    <Користувач>4</Користувач>
+    <Країна>Канада</Країна>
+    <Місто>Оттава</Місто>
+    <Бюджет>17</Бюджет>
+    <Статус>Завершено</Статус>
+    <Оцінка>10</Оцінка>
+    <Коментар>сироп був смачний :)</Коментар>
+  </Travels>
+</NewDataSet>

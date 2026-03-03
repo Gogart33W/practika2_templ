@@ -26,6 +26,8 @@
             this.indZavd1ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.третійТижденьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.практична31ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.четвертийТижденьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.indZavd2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lblUserInfo = new System.Windows.Forms.Label();
             this.btnLogout = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
@@ -38,7 +40,8 @@
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.першийТижденьToolStripMenuItem,
             this.другийТижденьToolStripMenuItem,
-            this.третійТижденьToolStripMenuItem});
+            this.третійТижденьToolStripMenuItem,
+            this.четвертийТижденьToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(800, 28);
@@ -107,6 +110,21 @@
             this.практична31ToolStripMenuItem.Text = "Практична 3";
             this.практична31ToolStripMenuItem.Click += new System.EventHandler(this.практична31ToolStripMenuItem_Click);
             // 
+            // четвертийТижденьToolStripMenuItem
+            // 
+            this.четвертийТижденьToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.indZavd2ToolStripMenuItem});
+            this.четвертийТижденьToolStripMenuItem.Name = "четвертийТижденьToolStripMenuItem";
+            this.четвертийТижденьToolStripMenuItem.Size = new System.Drawing.Size(155, 24);
+            this.четвертийТижденьToolStripMenuItem.Text = "Четвертий тиждень";
+            // 
+            // indZavd2ToolStripMenuItem
+            // 
+            this.indZavd2ToolStripMenuItem.Name = "indZavd2ToolStripMenuItem";
+            this.indZavd2ToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.indZavd2ToolStripMenuItem.Text = "Індивідуальне 2";
+            this.indZavd2ToolStripMenuItem.Click += new System.EventHandler(this.indZavd2ToolStripMenuItem_Click);
+            // 
             // lblUserInfo
             // 
             this.lblUserInfo.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
@@ -172,6 +190,8 @@
         private System.Windows.Forms.ToolStripMenuItem indZavd1ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem третійТижденьToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem практична31ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem четвертийТижденьToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem indZavd2ToolStripMenuItem;
         private System.Windows.Forms.Label lblUserInfo;
         private System.Windows.Forms.Button btnLogout;
     }

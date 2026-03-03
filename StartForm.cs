@@ -48,7 +48,7 @@ namespace Navchpract_2
                 this.Controls["lblUserInfo"].Left = (this.ClientSize.Width - this.Controls["lblUserInfo"].Width) / 2;
             }
 
-            // 🥷 МАГІЯ: Тепер зникає ВСЯ ВКЛАДКА "Третій тиждень", а не тільки кнопка всередині
+            // 🥷 МАГІЯ: Зникає вкладка "Третій тиждень"
             if (третійТижденьToolStripMenuItem != null)
             {
                 третійТижденьToolStripMenuItem.Visible = currentUser.IsAdmin;
@@ -101,6 +101,33 @@ namespace Navchpract_2
         }
 
         private void третійТижденьToolStripMenuItem_Click(object sender, EventArgs e) { }
+
+        // 🔥 РОЗУМНИЙ ВХІД (РОУТЕР ДЛЯ ІНД. ЗАВДАННЯ 2) 🔥
+        private void indZavd2ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+
+            if (currentUser.IsAdmin)
+            {
+                // Якщо це АДМІН — відкриваємо форму-таблицю (пульт управління)
+                using (IndZavd2Form adminForm = new IndZavd2Form(currentUser))
+                {
+                    adminForm.StartPosition = FormStartPosition.CenterScreen;
+                    adminForm.ShowDialog();
+                }
+            }
+            else
+            {
+                // Якщо це ЮЗЕР — відкриваємо стильну стрічку подорожей
+                using (UserFeedForm feedForm = new UserFeedForm(currentUser))
+                {
+                    feedForm.StartPosition = FormStartPosition.CenterScreen;
+                    feedForm.ShowDialog();
+                }
+            }
+
+            this.Show();
+        }
 
         private void btnLogout_Click(object sender, EventArgs e)
         {

@@ -25,6 +25,7 @@
             this.btnShowPass = new System.Windows.Forms.Button();
             this.btnHidePass = new System.Windows.Forms.Button();
             this.btnClear = new System.Windows.Forms.Button();
+            this.btnForgotPassword = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // cmbLogin
@@ -127,12 +128,31 @@
             this.btnClear.UseVisualStyleBackColor = false;
             this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
             // 
+            // btnForgotPassword
+            // 
+            this.btnForgotPassword.BackColor = System.Drawing.Color.Transparent;
+            this.btnForgotPassword.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnForgotPassword.FlatAppearance.BorderSize = 0;
+            this.btnForgotPassword.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+            this.btnForgotPassword.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            this.btnForgotPassword.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnForgotPassword.Font = new System.Drawing.Font("Segoe UI", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.btnForgotPassword.ForeColor = System.Drawing.Color.White;
+            this.btnForgotPassword.Location = new System.Drawing.Point(155, 222);
+            this.btnForgotPassword.Name = "btnForgotPassword";
+            this.btnForgotPassword.Size = new System.Drawing.Size(180, 30);
+            this.btnForgotPassword.TabIndex = 8;
+            this.btnForgotPassword.Text = "Забули пароль?";
+            this.btnForgotPassword.UseVisualStyleBackColor = false;
+            this.btnForgotPassword.Click += new System.EventHandler(this.btnForgotPassword_Click);
+            // 
             // LoginForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.ClientSize = new System.Drawing.Size(460, 260);
+            this.Controls.Add(this.btnForgotPassword);
             this.Controls.Add(this.btnClear);
             this.Controls.Add(this.btnHidePass);
             this.Controls.Add(this.btnShowPass);
@@ -162,5 +182,6 @@
         private System.Windows.Forms.Button btnShowPass;
         private System.Windows.Forms.Button btnHidePass;
         private System.Windows.Forms.Button btnClear;
+        private System.Windows.Forms.Button btnForgotPassword;
     }
 }

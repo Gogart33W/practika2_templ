@@ -53,6 +53,11 @@
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.6.1.2\lib\net462\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
+    <Reference Include="System.Security" />
+    <Reference Include="System.Security.Cryptography.ProtectedData, Version=10.0.0.3, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.ProtectedData.10.0.3\lib\net462\System.Security.Cryptography.ProtectedData.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -84,11 +89,21 @@
     <Compile Include="IndZavd1.Designer.cs">
       <DependentUpon>IndZavd1.cs</DependentUpon>
     </Compile>
+    <Compile Include="IndZavd2Form.cs" />
+    <Compile Include="IndZavd2Form.Designer.cs">
+      <DependentUpon>IndZavd2Form.cs</DependentUpon>
+    </Compile>
     <Compile Include="LoginForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="LoginForm.Designer.cs">
       <DependentUpon>LoginForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MapForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MapForm.Designer.cs">
+      <DependentUpon>MapForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ModalForm.cs">
       <SubType>Form</SubType>
@@ -119,6 +134,12 @@
     <Compile Include="StartForm.Designer.cs">
       <DependentUpon>StartForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="UserFeedForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UserFeedForm.Designer.cs">
+      <DependentUpon>UserFeedForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="WordDataGrid.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -134,8 +155,14 @@
     <EmbeddedResource Include="IndZavd1.resx">
       <DependentUpon>IndZavd1.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="IndZavd2Form.resx">
+      <DependentUpon>IndZavd2Form.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MapForm.resx">
+      <DependentUpon>MapForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ModalForm.resx">
       <DependentUpon>ModalForm.cs</DependentUpon>
@@ -158,6 +185,9 @@
     </Compile>
     <EmbeddedResource Include="StartForm.resx">
       <DependentUpon>StartForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserFeedForm.resx">
+      <DependentUpon>UserFeedForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="WordDataGrid.resx">
       <DependentUpon>WordDataGrid.cs</DependentUpon>

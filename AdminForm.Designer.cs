@@ -380,7 +380,6 @@
             this.tsBtnRefresh.Size = new System.Drawing.Size(29, 24);
             this.tsBtnRefresh.Text = "🔄";
             this.tsBtnRefresh.ToolTipText = "Оновити з файлу";
-            this.tsBtnRefresh.Click += new System.EventHandler(this.tsBtnRefresh_Click);
             // 
             // tsBtnClear
             // 
@@ -389,7 +388,6 @@
             this.tsBtnClear.Size = new System.Drawing.Size(29, 24);
             this.tsBtnClear.Text = "📝";
             this.tsBtnClear.ToolTipText = "Очистити поля";
-            this.tsBtnClear.Click += new System.EventHandler(this.tsBtnClear_Click);
             // 
             // toolStripSeparator1
             // 
@@ -403,7 +401,6 @@
             this.tsBtnApply.Size = new System.Drawing.Size(29, 24);
             this.tsBtnApply.Text = "✔️";
             this.tsBtnApply.ToolTipText = "Застосувати зміни";
-            this.tsBtnApply.Click += new System.EventHandler(this.tsBtnApply_Click);
             // 
             // tsBtnSave
             // 
@@ -412,7 +409,6 @@
             this.tsBtnSave.Size = new System.Drawing.Size(29, 24);
             this.tsBtnSave.Text = "💾";
             this.tsBtnSave.ToolTipText = "Зберегти у файл";
-            this.tsBtnSave.Click += new System.EventHandler(this.SaveSelectedUserChanges);
             // 
             // toolStripSeparator2
             // 
@@ -426,7 +422,6 @@
             this.tsBtnDelete.Size = new System.Drawing.Size(29, 24);
             this.tsBtnDelete.Text = "🗑️";
             this.tsBtnDelete.ToolTipText = "Видалити";
-            this.tsBtnDelete.Click += new System.EventHandler(this.DeleteSelectedUser);
             // 
             // btnSavePassword
             // 
@@ -438,7 +433,6 @@
             this.btnSavePassword.TabIndex = 10;
             this.btnSavePassword.Text = "💾";
             this.btnSavePassword.UseVisualStyleBackColor = false;
-            this.btnSavePassword.Click += new System.EventHandler(this.SaveSelectedUserChanges);
             // 
             // btnSaveLogin
             // 
@@ -450,7 +444,6 @@
             this.btnSaveLogin.TabIndex = 9;
             this.btnSaveLogin.Text = "💾";
             this.btnSaveLogin.UseVisualStyleBackColor = false;
-            this.btnSaveLogin.Click += new System.EventHandler(this.SaveSelectedUserChanges);
             // 
             // btnDeleteUser
             // 
@@ -463,7 +456,6 @@
             this.btnDeleteUser.TabIndex = 7;
             this.btnDeleteUser.Text = "X";
             this.btnDeleteUser.UseVisualStyleBackColor = false;
-            this.btnDeleteUser.Click += new System.EventHandler(this.DeleteSelectedUser);
             // 
             // cmbEditSelectUser
             // 
