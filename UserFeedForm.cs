@@ -19,7 +19,7 @@ namespace Navchpract_2
         {
             InitializeComponent();
             Session.Username = currentUser.Login;
-            Session.Role = "User";
+            Session.Role = currentUser.IsAdmin ? "Admin" : "User";
             xmlFilePath = Path.Combine(Application.StartupPath, "TravelData.xml");
         }
 
@@ -27,16 +27,14 @@ namespace Navchpract_2
 
         private void UserFeedForm_Load(object sender, EventArgs e)
         {
-            lblTitle.Text = $"Travel Hub | {Session.Username}";
+            string roleLabel = Session.Role == "Admin" ? "[МОДЕРАТОР]" : "";
+            lblTitle.Text = $"Travel Hub | {Session.Username} {roleLabel}";
 
-            // 🔥 ЖОРСТКА ФІКСАЦІЯ КАРТОК В ОДИН СТОВПЧИК ЗГОРУ ДОНИЗУ
-            flowMyTrips.FlowDirection = FlowDirection.TopDown;
-            flowMyTrips.WrapContents = false;
-            flowMyTrips.AutoScroll = true;
-
-            flowGlobalFeed.FlowDirection = FlowDirection.TopDown;
-            flowGlobalFeed.WrapContents = false;
-            flowGlobalFeed.AutoScroll = true;
+            // 🔥 ВИРІЗАЄМО ВКЛАДКУ "МОЇ ПОДОРОЖІ" ДЛЯ АДМІНА З КІНЦЯМИ
+            if (Session.Role == "Admin")
+            {
+                tabControlFeed.TabPages.Remove(tabMyTrips);
+            }
 
             LoadData();
             RenderFeeds();
@@ -45,11 +43,7 @@ namespace Navchpract_2
         private void LoadData()
         {
             travelTable = new DataTable("Travels");
-
-            if (File.Exists(xmlFilePath))
-            {
-                travelTable.ReadXml(xmlFilePath);
-            }
+            if (File.Exists(xmlFilePath)) travelTable.ReadXml(xmlFilePath);
             else
             {
                 travelTable.Columns.Add("ID", typeof(int)).AutoIncrement = true;
@@ -65,14 +59,17 @@ namespace Navchpract_2
 
         private void RenderFeeds()
         {
-            flowMyTrips.Controls.Clear();
+            if (Session.Role != "Admin")
+            {
+                flowMyTrips.Controls.Clear();
+                DataRow[] myTrips = travelTable.Select($"Користувач = '{Session.Username}'");
+                if (myTrips.Length == 0) flowMyTrips.Controls.Add(CreateEmptyLabel("У тебе поки немає призначених подорожей 😢"));
+                else foreach (DataRow row in myTrips) flowMyTrips.Controls.Add(CreateMyTripCard(row));
+            }
+
             flowGlobalFeed.Controls.Clear();
+            DataRow[] globalTrips = travelTable.Select("Статус = 'Завершено' OR Статус = 'Очікує перевірки'");
 
-            DataRow[] myTrips = travelTable.Select($"Користувач = '{Session.Username}'");
-            if (myTrips.Length == 0) flowMyTrips.Controls.Add(CreateEmptyLabel("У тебе поки немає призначених подорожей 😢"));
-            else foreach (DataRow row in myTrips) flowMyTrips.Controls.Add(CreateMyTripCard(row));
-
-            DataRow[] globalTrips = travelTable.Select($"Статус = 'Завершено'");
             if (globalTrips.Length == 0) flowGlobalFeed.Controls.Add(CreateEmptyLabel("Стрічка поки порожня. Будь першим, хто завершить подорож!"));
             else foreach (DataRow row in globalTrips) flowGlobalFeed.Controls.Add(CreateGlobalFeedCard(row));
         }
@@ -85,7 +82,6 @@ namespace Navchpract_2
         private Panel CreateMyTripCard(DataRow row)
         {
             int cardWidth = flowMyTrips.ClientSize.Width - 40;
-            // Трохи збільшив висоту картки (до 280), щоб влізла підказка
             Panel pnlCard = new Panel { BackColor = Color.White, Width = cardWidth, Height = 280, Margin = new Padding(10, 10, 10, 20), BorderStyle = BorderStyle.FixedSingle };
 
             Label lblDestination = new Label { Text = $"📍 {row["Країна"]} — {row["Місто"]}", Font = new Font("Segoe UI", 14, FontStyle.Bold), Location = new Point(15, 15), AutoSize = true };
@@ -93,59 +89,62 @@ namespace Navchpract_2
 
             Label lblStatusText = new Label { Text = "Статус:", Location = new Point(20, 90), AutoSize = true, Font = new Font("Segoe UI", 10, FontStyle.Bold) };
             ComboBox cmbStatus = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList, Font = new Font("Segoe UI", 10), Location = new Point(85, 87), Width = 140 };
-            cmbStatus.Items.AddRange(new string[] { "Планується", "Завершено" });
+
+            cmbStatus.Items.AddRange(new string[] { "Планується", "Очікує перевірки", "Завершено" });
 
             string currentStatus = row["Статус"].ToString();
             if (cmbStatus.Items.Contains(currentStatus)) cmbStatus.SelectedItem = currentStatus;
-            else cmbStatus.SelectedIndex = 0;
 
             Label lblRatingText = new Label { Text = "Оцінка (1-10):", Location = new Point(250, 90), AutoSize = true, Font = new Font("Segoe UI", 10, FontStyle.Bold) };
             NumericUpDown numRating = new NumericUpDown { Minimum = 1, Maximum = 10, Font = new Font("Segoe UI", 10), Location = new Point(365, 87), Width = 60 };
-            numRating.Value = row["Оцінка"] != DBNull.Value ? Convert.ToInt32(row["Оцінка"]) : 1;
+
+            int rVal = row["Оцінка"] != DBNull.Value ? Convert.ToInt32(row["Оцінка"]) : 1;
+            if (rVal < 1) rVal = 1; if (rVal > 10) rVal = 10;
+            numRating.Value = rVal;
 
             TextBox txtComment = new TextBox { Multiline = true, Font = new Font("Segoe UI", 10), Location = new Point(20, 130), Width = cardWidth - 40, Height = 60, Text = row["Коментар"].ToString() };
             if (string.IsNullOrWhiteSpace(txtComment.Text)) { txtComment.Text = "Напишіть відгук..."; txtComment.ForeColor = Color.Gray; }
             txtComment.Enter += (s, e) => { if (txtComment.Text == "Напишіть відгук...") { txtComment.Text = ""; txtComment.ForeColor = Color.Black; } };
             txtComment.Leave += (s, e) => { if (string.IsNullOrWhiteSpace(txtComment.Text)) { txtComment.Text = "Напишіть відгук..."; txtComment.ForeColor = Color.Gray; } };
 
-            // 🔥 1. ВІЗУАЛЬНА ПІДКАЗКА
-            Label lblInfo = new Label
-            {
-                Text = "ℹ️ Відгук з'явиться у загальній стрічці лише для 'Завершених' подорожей.",
-                Font = new Font("Segoe UI", 8, FontStyle.Italic),
-                ForeColor = Color.Gray,
-                Location = new Point(17, 195),
-                AutoSize = true
-            };
-
+            Label lblInfo = new Label { Text = "ℹ️ Звіт буде показано всім, але потребує затвердження адміном.", Font = new Font("Segoe UI", 8, FontStyle.Italic), ForeColor = Color.Gray, Location = new Point(17, 195), AutoSize = true };
             Button btnSave = new Button { Text = "Опублікувати звіт", BackColor = Color.DodgerBlue, ForeColor = Color.White, FlatStyle = FlatStyle.Flat, Font = new Font("Segoe UI", 10, FontStyle.Bold), Location = new Point(20, 220), Size = new Size(cardWidth - 40, 40), Cursor = Cursors.Hand };
             btnSave.FlatAppearance.BorderSize = 0;
+
+            if (currentStatus == "Запит")
+            {
+                cmbStatus.Items.Add("Запит"); cmbStatus.SelectedItem = "Запит";
+                btnSave.Text = "Очікується бюджет від адміністратора";
+                cmbStatus.Enabled = false; numRating.Enabled = false; txtComment.Enabled = false; txtComment.ReadOnly = true; btnSave.Enabled = false; btnSave.BackColor = Color.Gray;
+            }
+            else if (currentStatus == "Очікує перевірки")
+            {
+                btnSave.Text = "Очікує підтвердження від адміністратора";
+                cmbStatus.Enabled = false; numRating.Enabled = false; txtComment.Enabled = false; txtComment.ReadOnly = true; btnSave.Enabled = false; btnSave.BackColor = Color.Gray;
+            }
+            else if (currentStatus == "Завершено")
+            {
+                cmbStatus.Enabled = false;
+                btnSave.Text = "💾 Оновити відгук";
+                btnSave.BackColor = Color.ForestGreen;
+            }
 
             btnSave.Click += (s, e) =>
             {
                 try
                 {
                     string inputText = txtComment.Text == "Напишіть відгук..." ? "" : txtComment.Text.Trim();
-                    string selectedStatus = cmbStatus.SelectedItem.ToString();
+                    string selectedStatus = currentStatus;
 
-                    // 🔥 2. РОЗУМНЕ ПОПЕРЕДЖЕННЯ
-                    if (selectedStatus == "Планується" && !string.IsNullOrWhiteSpace(inputText))
+                    if (currentStatus == "Планується" && !string.IsNullOrWhiteSpace(inputText))
                     {
-                        DialogResult res = MessageBox.Show(
-                            "Ти написав відгук, але статус подорожі — 'Планується'. Такі відгуки не потрапляють у Стрічку спільноти.\n\nБажаєш автоматично змінити статус на 'Завершено' та опублікувати?",
-                            "Публікація відгуку",
-                            MessageBoxButtons.YesNoCancel,
-                            MessageBoxIcon.Question);
-
-                        if (res == DialogResult.Yes)
-                        {
-                            cmbStatus.SelectedItem = "Завершено";
-                            selectedStatus = "Завершено";
-                        }
-                        else if (res == DialogResult.Cancel)
-                        {
-                            return; // Скасовуємо збереження, якщо юзер передумав
-                        }
+                        DialogResult res = MessageBox.Show("Відправити звіт в стрічку?\n\nВідгук з'явиться відразу, але статус подорожі очікуватиме підтвердження адміна.", "Публікація", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                        if (res == DialogResult.Yes) { selectedStatus = "Очікує перевірки"; }
+                        else return;
+                    }
+                    else if (currentStatus == "Завершено")
+                    {
+                        selectedStatus = "Завершено";
                     }
 
                     row["Статус"] = selectedStatus;
@@ -155,13 +154,10 @@ namespace Navchpract_2
                     travelTable.AcceptChanges();
                     travelTable.WriteXml(xmlFilePath, XmlWriteMode.WriteSchema);
 
-                    MessageBox.Show("Звіт успішно збережено!", "Успіх", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Дані успішно збережено!", "Успіх", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     RenderFeeds();
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Виникла помилка: {ex.Message}", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                catch (Exception ex) { MessageBox.Show($"Помилка: {ex.Message}"); }
             };
 
             pnlCard.Controls.Add(lblDestination); pnlCard.Controls.Add(lblBudget); pnlCard.Controls.Add(lblStatusText);
@@ -174,21 +170,85 @@ namespace Navchpract_2
         private Panel CreateGlobalFeedCard(DataRow row)
         {
             int cardWidth = flowGlobalFeed.ClientSize.Width - 40;
-            Panel pnlCard = new Panel { BackColor = Color.White, Width = cardWidth, Height = 170, Margin = new Padding(10, 10, 10, 20), BorderStyle = BorderStyle.FixedSingle };
+            Panel pnlCard = new Panel { BackColor = Color.White, Width = cardWidth, Height = 210, Margin = new Padding(10, 10, 10, 20), BorderStyle = BorderStyle.FixedSingle };
 
-            Label lblUser = new Label { Text = $"👤 @{row["Користувач"]}", Font = new Font("Segoe UI", 12, FontStyle.Bold), ForeColor = Color.DarkSlateBlue, Location = new Point(15, 15), AutoSize = true };
-            Label lblDestination = new Label { Text = $"подорожував(-ла) до 🌍 {row["Країна"]}, {row["Місто"]}", Font = new Font("Segoe UI", 11, FontStyle.Italic), ForeColor = Color.DimGray, Location = new Point(15, 45), AutoSize = true };
+            string author = row["Користувач"].ToString();
+            Label lblUser = new Label { Text = $"👤 @{author}", Font = new Font("Segoe UI", 12, FontStyle.Bold), ForeColor = Color.DarkSlateBlue, Location = new Point(15, 15), AutoSize = true };
+            Label lblDestination = new Label { Text = $"🌍 {row["Країна"]}, {row["Місто"]}", Font = new Font("Segoe UI", 11, FontStyle.Bold), ForeColor = Color.Black, Location = new Point(15, 45), AutoSize = true };
 
             int rating = row["Оцінка"] != DBNull.Value ? Convert.ToInt32(row["Оцінка"]) : 1;
-            string stars = new string('⭐', rating);
-            Label lblRating = new Label { Text = $"Оцінка: {rating}/10 {stars}", Font = new Font("Segoe UI", 10, FontStyle.Bold), ForeColor = Color.DarkOrange, Location = new Point(15, 75), AutoSize = true };
+            Label lblRating = new Label { Text = $"Оцінка: {rating}/10 {new string('⭐', rating)}", Font = new Font("Segoe UI", 10, FontStyle.Bold), ForeColor = Color.DarkOrange, Location = new Point(15, 70), AutoSize = true };
 
             string commentText = row["Коментар"].ToString();
             if (string.IsNullOrWhiteSpace(commentText)) commentText = "Користувач залишив поїздку без коментаря.";
 
-            Label lblComment = new Label { Text = $"\"{commentText}\"", Font = new Font("Segoe UI", 11), Location = new Point(15, 105), MaximumSize = new Size(cardWidth - 30, 50), AutoSize = true };
+            Label lblComment = new Label { Text = $"\"{commentText}\"", Font = new Font("Segoe UI", 11, FontStyle.Italic), Location = new Point(15, 95), MaximumSize = new Size(cardWidth - 30, 50), AutoSize = true };
 
             pnlCard.Controls.Add(lblUser); pnlCard.Controls.Add(lblDestination); pnlCard.Controls.Add(lblRating); pnlCard.Controls.Add(lblComment);
+
+            if (Session.Role != "Admin")
+            {
+                Button btnOrder = new Button { Text = "🔥 Хочу сюди!", BackColor = Color.Coral, ForeColor = Color.White, FlatStyle = FlatStyle.Flat, Font = new Font("Segoe UI", 9, FontStyle.Bold), Location = new Point(15, 160), Size = new Size(120, 35), Cursor = Cursors.Hand };
+                btnOrder.FlatAppearance.BorderSize = 0;
+                btnOrder.Click += (s, e) =>
+                {
+                    DialogResult res = MessageBox.Show($"Відправити заявку на тур у {row["Країна"]} ({row["Місто"]})?", "Замовлення", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    if (res == DialogResult.Yes)
+                    {
+                        travelTable.Rows.Add(null, Session.Username, row["Країна"], row["Місто"], 0, "Запит", 1, "");
+                        travelTable.AcceptChanges();
+                        travelTable.WriteXml(xmlFilePath, XmlWriteMode.WriteSchema);
+                        MessageBox.Show("Заявку відправлено!", "Успіх", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        RenderFeeds();
+                    }
+                };
+                pnlCard.Controls.Add(btnOrder);
+            }
+
+            bool isAdmin = Session.Role == "Admin";
+            bool isMyComment = author == Session.Username;
+
+            if (isAdmin || isMyComment)
+            {
+                Button btnDelete = new Button { Text = "🗑️ Видалити", BackColor = Color.Crimson, ForeColor = Color.White, FlatStyle = FlatStyle.Flat, Location = new Point(cardWidth - 110, 160), Size = new Size(95, 35), Cursor = Cursors.Hand };
+                btnDelete.FlatAppearance.BorderSize = 0;
+                btnDelete.Click += (s, e) =>
+                {
+                    if (MessageBox.Show("Видалити цей відгук?", "Модерація", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                    {
+                        row["Коментар"] = "";
+                        travelTable.AcceptChanges();
+                        travelTable.WriteXml(xmlFilePath, XmlWriteMode.WriteSchema);
+                        RenderFeeds();
+                    }
+                };
+                pnlCard.Controls.Add(btnDelete);
+            }
+
+            if (isMyComment && !isAdmin)
+            {
+                Button btnEdit = new Button { Text = "✏️ Змінити", BackColor = Color.LightSeaGreen, ForeColor = Color.White, FlatStyle = FlatStyle.Flat, Location = new Point(cardWidth - 215, 160), Size = new Size(95, 35), Cursor = Cursors.Hand };
+                btnEdit.FlatAppearance.BorderSize = 0;
+                btnEdit.Click += (s, e) =>
+                {
+                    TextBox txtEdit = new TextBox { Text = row["Коментар"].ToString(), Multiline = true, Location = lblComment.Location, Size = new Size(cardWidth - 30, 50), Font = new Font("Segoe UI", 10) };
+                    pnlCard.Controls.Add(txtEdit);
+                    txtEdit.BringToFront();
+
+                    btnEdit.Text = "💾 Зберегти";
+                    btnEdit.BackColor = Color.ForestGreen;
+
+                    btnEdit.Click -= null;
+                    btnEdit.Click += (sender2, e2) =>
+                    {
+                        row["Коментар"] = txtEdit.Text;
+                        travelTable.AcceptChanges();
+                        travelTable.WriteXml(xmlFilePath, XmlWriteMode.WriteSchema);
+                        RenderFeeds();
+                    };
+                };
+                pnlCard.Controls.Add(btnEdit);
+            }
 
             return pnlCard;
         }

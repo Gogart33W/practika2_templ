@@ -12,7 +12,6 @@ namespace Navchpract_2
     {
         public string SelectedCountry { get; private set; }
 
-        // --- Камера ---
         private float zoom = 1.4f;
         private float offsetX = 0f;
         private float offsetY = 50f;
@@ -47,7 +46,6 @@ namespace Navchpract_2
             mapFilePath = Path.Combine(Application.StartupPath, "world_map_hd.png");
             LoadOrDownloadMapAsync();
 
-            // 🔥 ТВОЇ ПЕРЕВІРЕНІ КООРДИНАТИ 🔥
             markers.Add(new CountryMarker { Name = "Канада", MapX = 259f, MapY = 101f });
             markers.Add(new CountryMarker { Name = "США", MapX = 262f, MapY = 117f });
             markers.Add(new CountryMarker { Name = "Мексика", MapX = 189f, MapY = 156f });
@@ -98,7 +96,6 @@ namespace Navchpract_2
 
         private void Map_MouseClick(object sender, MouseEventArgs e)
         {
-            // Закриття на "X"
             if (e.X > this.Width - 45 && e.Y < 45) this.Close();
 
             foreach (var m in markers)
@@ -207,12 +204,10 @@ namespace Navchpract_2
                 DrawMarker(g, m, sx + mapW, sy, f);
             }
 
-            // Header
             g.FillRectangle(new SolidBrush(Color.FromArgb(250, 8, 12, 18)), 0, 0, this.Width, 50);
             g.DrawLine(new Pen(Color.Cyan, 2), 0, 50, this.Width, 50);
             g.DrawString("СИСТЕМА ГЛОБАЛЬНОЇ НАВІГАЦІЇ", new Font("Consolas", 14, FontStyle.Bold), Brushes.Cyan, 20, 15);
 
-            // Close button
             g.FillRectangle(Brushes.Crimson, this.Width - 45, 10, 35, 30);
             g.DrawString("X", f, Brushes.White, this.Width - 33, 16);
         }
@@ -230,6 +225,11 @@ namespace Navchpract_2
                 g.FillEllipse(Brushes.Cyan, x - 3, y - 3, 6, 6);
                 g.DrawString(m.Name, font, new SolidBrush(Color.FromArgb(180, 0, 255, 255)), x + 8, y - 7);
             }
+        }
+
+        private void MapForm_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -24,6 +24,7 @@
             this.txtSearch = new System.Windows.Forms.TextBox();
             this.cmbFilterMode = new System.Windows.Forms.ComboBox();
             this.lblSearch = new System.Windows.Forms.Label();
+            this.chkOnlyRequests = new System.Windows.Forms.CheckBox();
             this.dgvData = new System.Windows.Forms.DataGridView();
             this.grpInput = new System.Windows.Forms.GroupBox();
             this.lblUser = new System.Windows.Forms.Label();
@@ -46,6 +47,7 @@
             this.btnImportXML = new System.Windows.Forms.Button();
             this.chartTravel = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.pbPlane = new System.Windows.Forms.PictureBox();
+            this.btnOpenFeed = new System.Windows.Forms.Button();
             this.ctxGridMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.ctxMenuEdit = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxMenuDelete = new System.Windows.Forms.ToolStripMenuItem();
@@ -93,6 +95,7 @@
             this.pbBack.Location = new System.Drawing.Point(10, 7);
             this.pbBack.Name = "pbBack";
             this.pbBack.Size = new System.Drawing.Size(30, 30);
+            this.pbBack.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pbBack.TabIndex = 1;
             this.pbBack.TabStop = false;
             this.pbBack.Click += new System.EventHandler(this.pbBack_Click);
@@ -104,6 +107,7 @@
             this.pbExit.Location = new System.Drawing.Point(940, 7);
             this.pbExit.Name = "pbExit";
             this.pbExit.Size = new System.Drawing.Size(30, 30);
+            this.pbExit.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pbExit.TabIndex = 2;
             this.pbExit.TabStop = false;
             this.pbExit.Click += new System.EventHandler(this.pbExit_Click);
@@ -111,9 +115,9 @@
             // txtSearch
             // 
             this.txtSearch.Font = new System.Drawing.Font("Segoe UI", 10.2F);
-            this.txtSearch.Location = new System.Drawing.Point(220, 60);
+            this.txtSearch.Location = new System.Drawing.Point(200, 60);
             this.txtSearch.Name = "txtSearch";
-            this.txtSearch.Size = new System.Drawing.Size(400, 30);
+            this.txtSearch.Size = new System.Drawing.Size(220, 30);
             this.txtSearch.TabIndex = 5;
             // 
             // cmbFilterMode
@@ -122,7 +126,7 @@
             this.cmbFilterMode.Font = new System.Drawing.Font("Segoe UI", 10.2F);
             this.cmbFilterMode.Location = new System.Drawing.Point(85, 60);
             this.cmbFilterMode.Name = "cmbFilterMode";
-            this.cmbFilterMode.Size = new System.Drawing.Size(125, 31);
+            this.cmbFilterMode.Size = new System.Drawing.Size(110, 31);
             this.cmbFilterMode.TabIndex = 4;
             // 
             // lblSearch
@@ -134,6 +138,18 @@
             this.lblSearch.Size = new System.Drawing.Size(68, 23);
             this.lblSearch.TabIndex = 3;
             this.lblSearch.Text = "Пошук:";
+            // 
+            // chkOnlyRequests
+            // 
+            this.chkOnlyRequests.AutoSize = true;
+            this.chkOnlyRequests.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.chkOnlyRequests.ForeColor = System.Drawing.Color.DarkRed;
+            this.chkOnlyRequests.Location = new System.Drawing.Point(435, 63);
+            this.chkOnlyRequests.Name = "chkOnlyRequests";
+            this.chkOnlyRequests.Size = new System.Drawing.Size(260, 24);
+            this.chkOnlyRequests.TabIndex = 20;
+            this.chkOnlyRequests.Text = "🚨 Тільки запити / На перевірці";
+            this.chkOnlyRequests.UseVisualStyleBackColor = true;
             // 
             // dgvData
             // 
@@ -174,12 +190,13 @@
             // lblUser
             // 
             this.lblUser.AutoSize = true;
-            this.lblUser.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.lblUser.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.lblUser.ForeColor = System.Drawing.Color.DarkSlateBlue;
             this.lblUser.Location = new System.Drawing.Point(15, 235);
             this.lblUser.Name = "lblUser";
-            this.lblUser.Size = new System.Drawing.Size(82, 20);
+            this.lblUser.Size = new System.Drawing.Size(61, 20);
             this.lblUser.TabIndex = 16;
-            this.lblUser.Text = "Працівник";
+            this.lblUser.Text = "Клієнт";
             // 
             // cmbAssignedUser
             // 
@@ -204,7 +221,11 @@
             // 
             this.cmbStatus.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbStatus.Font = new System.Drawing.Font("Segoe UI", 10.2F);
-            this.cmbStatus.Items.AddRange(new object[] { "Планується", "Завершено" });
+            this.cmbStatus.Items.AddRange(new object[] {
+            "Запит",
+            "Планується",
+            "Очікує перевірки",
+            "Завершено"});
             this.cmbStatus.Location = new System.Drawing.Point(110, 190);
             this.cmbStatus.Name = "cmbStatus";
             this.cmbStatus.Size = new System.Drawing.Size(180, 31);
@@ -216,8 +237,10 @@
             this.lblAverageRating.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic);
             this.lblAverageRating.ForeColor = System.Drawing.Color.DimGray;
             this.lblAverageRating.Location = new System.Drawing.Point(18, 158);
-            this.lblAverageRating.Name = "lblAverageRating";
             this.lblAverageRating.MaximumSize = new System.Drawing.Size(270, 0);
+            this.lblAverageRating.Name = "lblAverageRating";
+            this.lblAverageRating.Size = new System.Drawing.Size(147, 20);
+            this.lblAverageRating.TabIndex = 18;
             this.lblAverageRating.Text = "⭐ Рейтинг міста: ...";
             // 
             // label3
@@ -284,7 +307,9 @@
             this.btnOpenMap.Location = new System.Drawing.Point(255, 33);
             this.btnOpenMap.Name = "btnOpenMap";
             this.btnOpenMap.Size = new System.Drawing.Size(35, 34);
+            this.btnOpenMap.TabIndex = 10;
             this.btnOpenMap.Text = "🌍";
+            this.btnOpenMap.UseVisualStyleBackColor = false;
             // 
             // btnAdd
             // 
@@ -294,7 +319,9 @@
             this.btnAdd.Location = new System.Drawing.Point(15, 280);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(130, 40);
+            this.btnAdd.TabIndex = 11;
             this.btnAdd.Text = "➕ ДОДАТИ";
+            this.btnAdd.UseVisualStyleBackColor = false;
             this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
             // 
             // btnEdit
@@ -305,7 +332,9 @@
             this.btnEdit.Location = new System.Drawing.Point(160, 280);
             this.btnEdit.Name = "btnEdit";
             this.btnEdit.Size = new System.Drawing.Size(130, 40);
+            this.btnEdit.TabIndex = 12;
             this.btnEdit.Text = "📝 ЗМІНИТИ";
+            this.btnEdit.UseVisualStyleBackColor = false;
             this.btnEdit.Click += new System.EventHandler(this.btnEdit_Click);
             // 
             // btnDelete
@@ -316,7 +345,9 @@
             this.btnDelete.Location = new System.Drawing.Point(15, 330);
             this.btnDelete.Name = "btnDelete";
             this.btnDelete.Size = new System.Drawing.Size(130, 40);
+            this.btnDelete.TabIndex = 13;
             this.btnDelete.Text = "🗑 ВИДАЛИТИ";
+            this.btnDelete.UseVisualStyleBackColor = false;
             this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
             // 
             // btnClear
@@ -326,8 +357,36 @@
             this.btnClear.Location = new System.Drawing.Point(160, 330);
             this.btnClear.Name = "btnClear";
             this.btnClear.Size = new System.Drawing.Size(130, 40);
+            this.btnClear.TabIndex = 14;
             this.btnClear.Text = "Очистити";
+            this.btnClear.UseVisualStyleBackColor = false;
             this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
+            // 
+            // btnExportXML
+            // 
+            this.btnExportXML.BackColor = System.Drawing.Color.LightSteelBlue;
+            this.btnExportXML.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnExportXML.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold);
+            this.btnExportXML.Location = new System.Drawing.Point(15, 510);
+            this.btnExportXML.Name = "btnExportXML";
+            this.btnExportXML.Size = new System.Drawing.Size(310, 40);
+            this.btnExportXML.TabIndex = 10;
+            this.btnExportXML.Text = "💾 Зберегти в XML";
+            this.btnExportXML.UseVisualStyleBackColor = false;
+            this.btnExportXML.Click += new System.EventHandler(this.btnExportXML_Click);
+            // 
+            // btnImportXML
+            // 
+            this.btnImportXML.BackColor = System.Drawing.Color.NavajoWhite;
+            this.btnImportXML.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnImportXML.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold);
+            this.btnImportXML.Location = new System.Drawing.Point(15, 560);
+            this.btnImportXML.Name = "btnImportXML";
+            this.btnImportXML.Size = new System.Drawing.Size(310, 40);
+            this.btnImportXML.TabIndex = 11;
+            this.btnImportXML.Text = "📂 Завантажити з XML";
+            this.btnImportXML.UseVisualStyleBackColor = false;
+            this.btnImportXML.Click += new System.EventHandler(this.btnImportXML_Click);
             // 
             // chartTravel
             // 
@@ -350,27 +409,21 @@
             this.pbPlane.TabIndex = 2;
             this.pbPlane.TabStop = false;
             // 
-            // btnExportXML
+            // btnOpenFeed
             // 
-            this.btnExportXML.BackColor = System.Drawing.Color.LightSteelBlue;
-            this.btnExportXML.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnExportXML.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold);
-            this.btnExportXML.Location = new System.Drawing.Point(15, 510);
-            this.btnExportXML.Name = "btnExportXML";
-            this.btnExportXML.Size = new System.Drawing.Size(310, 40);
-            this.btnExportXML.Text = "💾 Зберегти в XML";
-            this.btnExportXML.Click += new System.EventHandler(this.btnExportXML_Click);
-            // 
-            // btnImportXML
-            // 
-            this.btnImportXML.BackColor = System.Drawing.Color.NavajoWhite;
-            this.btnImportXML.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnImportXML.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold);
-            this.btnImportXML.Location = new System.Drawing.Point(15, 560);
-            this.btnImportXML.Name = "btnImportXML";
-            this.btnImportXML.Size = new System.Drawing.Size(310, 40);
-            this.btnImportXML.Text = "📂 Завантажити з XML";
-            this.btnImportXML.Click += new System.EventHandler(this.btnImportXML_Click);
+            this.btnOpenFeed.BackColor = System.Drawing.Color.DarkOrchid;
+            this.btnOpenFeed.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnOpenFeed.FlatAppearance.BorderSize = 0;
+            this.btnOpenFeed.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnOpenFeed.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold);
+            this.btnOpenFeed.ForeColor = System.Drawing.Color.White;
+            this.btnOpenFeed.Location = new System.Drawing.Point(730, 58);
+            this.btnOpenFeed.Name = "btnOpenFeed";
+            this.btnOpenFeed.Size = new System.Drawing.Size(200, 32);
+            this.btnOpenFeed.TabIndex = 12;
+            this.btnOpenFeed.Text = "🌍 Стрічка (Модерація)";
+            this.btnOpenFeed.UseVisualStyleBackColor = false;
+            this.btnOpenFeed.Click += new System.EventHandler(this.btnOpenFeed_Click);
             // 
             // IndZavd2Form
             // 
@@ -378,6 +431,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ClientSize = new System.Drawing.Size(980, 620);
+            this.Controls.Add(this.chkOnlyRequests);
+            this.Controls.Add(this.btnOpenFeed);
             this.Controls.Add(this.btnImportXML);
             this.Controls.Add(this.btnExportXML);
             this.Controls.Add(this.txtSearch);
@@ -402,8 +457,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.numBudget)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartTravel)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbPlane)).EndInit();
+            this.ctxGridMenu.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
 
         #endregion
@@ -435,8 +492,10 @@
         private System.Windows.Forms.TextBox txtSearch;
         private System.Windows.Forms.ComboBox cmbFilterMode;
         private System.Windows.Forms.Label lblSearch;
+        private System.Windows.Forms.CheckBox chkOnlyRequests;
         private System.Windows.Forms.Label lblUser;
         private System.Windows.Forms.ComboBox cmbAssignedUser;
+        private System.Windows.Forms.Button btnOpenFeed;
         private System.Windows.Forms.ContextMenuStrip ctxGridMenu;
         private System.Windows.Forms.ToolStripMenuItem ctxMenuEdit;
         private System.Windows.Forms.ToolStripMenuItem ctxMenuDelete;

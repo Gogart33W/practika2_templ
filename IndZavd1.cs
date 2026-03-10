@@ -84,7 +84,6 @@ namespace Navchpract_2
             numArea.KeyPress += ReplaceDotWithComma_KeyPress;
             numPrice.KeyPress += ReplaceDotWithComma_KeyPress;
 
-            // ФІКС "СТЕРТИХ" ПОЛІВ
             numRooms.Leave += Numeric_Leave;
             numArea.Leave += Numeric_Leave;
             numPrice.Leave += Numeric_Leave;
@@ -107,10 +106,8 @@ namespace Navchpract_2
             }
         }
 
-        // --- ФІКС ЧИСЛОВИХ ПОЛІВ ---
         private void ReplaceDotWithComma_KeyPress(object sender, KeyPressEventArgs e)
         {
-            // Якщо людина тисне крапку - система автоматично міняє її на кому
             if (e.KeyChar == '.') e.KeyChar = ',';
         }
 

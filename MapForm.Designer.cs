@@ -37,7 +37,7 @@
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Name = "MapForm";
             this.Text = "MapForm";
-            // Прибрали рядок з MapForm_Load, який викликав помилку
+            this.Load += new System.EventHandler(this.MapForm_Load);
             this.ResumeLayout(false);
 
         }

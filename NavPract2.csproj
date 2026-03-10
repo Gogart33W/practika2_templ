@@ -83,6 +83,12 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Grahic.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Grahic.Designer.cs">
+      <DependentUpon>Grahic.cs</DependentUpon>
+    </Compile>
     <Compile Include="IndZavd1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -151,6 +157,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Grahic.resx">
+      <DependentUpon>Grahic.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="IndZavd1.resx">
       <DependentUpon>IndZavd1.cs</DependentUpon>
@@ -280,6 +289,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Home3_37171.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Знімок екрана 2026-03-04 110025.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

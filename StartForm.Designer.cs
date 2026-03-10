@@ -26,6 +26,7 @@
             this.indZavd1ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.третійТижденьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.практична31ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.графікиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.четвертийТижденьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.indZavd2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lblUserInfo = new System.Windows.Forms.Label();
@@ -78,7 +79,6 @@
             this.другийТижденьToolStripMenuItem.Name = "другийТижденьToolStripMenuItem";
             this.другийТижденьToolStripMenuItem.Size = new System.Drawing.Size(136, 24);
             this.другийТижденьToolStripMenuItem.Text = "Другий тиждень";
-            this.другийТижденьToolStripMenuItem.Click += new System.EventHandler(this.другийТижденьToolStripMenuItem_Click);
             // 
             // практична21ToolStripMenuItem
             // 
@@ -97,31 +97,38 @@
             // третійТижденьToolStripMenuItem
             // 
             this.третійТижденьToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.практична31ToolStripMenuItem});
+            this.практична31ToolStripMenuItem,
+            this.графікиToolStripMenuItem});
             this.третійТижденьToolStripMenuItem.Name = "третійТижденьToolStripMenuItem";
             this.третійТижденьToolStripMenuItem.Size = new System.Drawing.Size(130, 24);
             this.третійТижденьToolStripMenuItem.Text = "Третій тиждень";
-            this.третійТижденьToolStripMenuItem.Click += new System.EventHandler(this.третійТижденьToolStripMenuItem_Click);
             // 
             // практична31ToolStripMenuItem
             // 
             this.практична31ToolStripMenuItem.Name = "практична31ToolStripMenuItem";
-            this.практична31ToolStripMenuItem.Size = new System.Drawing.Size(183, 26);
+            this.практична31ToolStripMenuItem.Size = new System.Drawing.Size(206, 26);
             this.практична31ToolStripMenuItem.Text = "Практична 3";
             this.практична31ToolStripMenuItem.Click += new System.EventHandler(this.практична31ToolStripMenuItem_Click);
+            // 
+            // графікиToolStripMenuItem
+            // 
+            this.графікиToolStripMenuItem.Name = "графікиToolStripMenuItem";
+            this.графікиToolStripMenuItem.Size = new System.Drawing.Size(206, 26);
+            this.графікиToolStripMenuItem.Text = "Графіки функцій";
+            this.графікиToolStripMenuItem.Click += new System.EventHandler(this.графікиToolStripMenuItem_Click);
             // 
             // четвертийТижденьToolStripMenuItem
             // 
             this.четвертийТижденьToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.indZavd2ToolStripMenuItem});
             this.четвертийТижденьToolStripMenuItem.Name = "четвертийТижденьToolStripMenuItem";
-            this.четвертийТижденьToolStripMenuItem.Size = new System.Drawing.Size(155, 24);
+            this.четвертийТижденьToolStripMenuItem.Size = new System.Drawing.Size(159, 24);
             this.четвертийТижденьToolStripMenuItem.Text = "Четвертий тиждень";
             // 
             // indZavd2ToolStripMenuItem
             // 
             this.indZavd2ToolStripMenuItem.Name = "indZavd2ToolStripMenuItem";
-            this.indZavd2ToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.indZavd2ToolStripMenuItem.Size = new System.Drawing.Size(202, 26);
             this.indZavd2ToolStripMenuItem.Text = "Індивідуальне 2";
             this.indZavd2ToolStripMenuItem.Click += new System.EventHandler(this.indZavd2ToolStripMenuItem_Click);
             // 
@@ -136,7 +143,7 @@
             this.lblUserInfo.Location = new System.Drawing.Point(260, 390);
             this.lblUserInfo.Name = "lblUserInfo";
             this.lblUserInfo.Padding = new System.Windows.Forms.Padding(2);
-            this.lblUserInfo.Size = new System.Drawing.Size(282, 29);
+            this.lblUserInfo.Size = new System.Drawing.Size(275, 29);
             this.lblUserInfo.TabIndex = 1;
             this.lblUserInfo.Text = "Користувач: адмін:Адміністратор";
             this.lblUserInfo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -190,6 +197,7 @@
         private System.Windows.Forms.ToolStripMenuItem indZavd1ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem третійТижденьToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem практична31ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem графікиToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem четвертийТижденьToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem indZavd2ToolStripMenuItem;
         private System.Windows.Forms.Label lblUserInfo;

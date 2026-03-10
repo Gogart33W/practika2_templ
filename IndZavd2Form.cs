@@ -9,7 +9,6 @@ using System.Windows.Forms.DataVisualization.Charting;
 
 namespace Navchpract_2
 {
-    // Клас сесії для зберігання даних про того, хто увійшов
     public static class Session
     {
         public static string Role;
@@ -21,13 +20,13 @@ namespace Navchpract_2
         private DataTable travelTable;
         private string xmlFilePath;
 
-        // Змінні для перетягування вікна без рамки
         private bool dragging = false;
         private Point dragCursorPoint;
         private Point dragFormPoint;
-        private string searchPlaceholder = "Введіть текст або >=, <= для чисел...";
+        private string searchPlaceholder = "Введіть текст...";
 
-        // Конструктор, який викликає StartForm
+        private bool hasUnsavedChanges = false;
+
         public IndZavd2Form(CUser currentUser)
         {
             InitializeComponent();
@@ -36,9 +35,10 @@ namespace Navchpract_2
 
             Session.Username = currentUser.Login;
             Session.Role = "Admin";
+
+            chkOnlyRequests.CheckedChanged += (s, e) => ApplyFilters();
         }
 
-        // Конструктор для дизайнера (заглушка)
         public IndZavd2Form() : this(new CUser("Gogart_Admin", "1111", true)) { }
 
         private void IndZavd2Form_Load(object sender, EventArgs e)
@@ -51,10 +51,21 @@ namespace Navchpract_2
             lblTitle.Text = $"Travel Journal (Панель Адміністратора) | {Session.Username}";
 
             SetupDataTable();
-            LoadUsersFromBinary(); // Підвантажуємо юзерів з input.bin
+            LoadUsersFromBinary();
             SetupUI();
             SetupChart();
             UpdatePictureBox("Планується");
+
+            int pendingRequests = travelTable.Select("Статус = 'Запит'").Length;
+            int pendingReviews = travelTable.Select("Статус = 'Очікує перевірки'").Length;
+
+            if (pendingRequests > 0 || pendingReviews > 0)
+            {
+                string msg = "У вас є нові сповіщення:\n\n";
+                if (pendingRequests > 0) msg += $"📩 Нових запитів на тури: {pendingRequests}\n";
+                if (pendingReviews > 0) msg += $"📝 Звітів очікують затвердження: {pendingReviews}\n";
+                MessageBox.Show(msg, "Увага, Адміністраторе!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
 
         private void SetupDataTable()
@@ -67,7 +78,6 @@ namespace Navchpract_2
             }
             else
             {
-                // Якщо файлу немає, створюємо структуру з нуля
                 travelTable.Columns.Add("ID", typeof(int)).AutoIncrement = true;
                 travelTable.Columns.Add("Користувач", typeof(string));
                 travelTable.Columns.Add("Країна", typeof(string));
@@ -92,6 +102,18 @@ namespace Navchpract_2
             dgvData.ContextMenuStrip = ctxGridMenu;
 
             dgvData.SelectionChanged += DgvData_SelectionChanged;
+            dgvData.DataBindingComplete += DgvData_DataBindingComplete;
+        }
+
+        private void DgvData_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+        {
+            foreach (DataGridViewRow row in dgvData.Rows)
+            {
+                string status = row.Cells["Статус"].Value?.ToString();
+                if (status == "Запит") row.DefaultCellStyle.BackColor = Color.LightGoldenrodYellow;
+                else if (status == "Очікує перевірки") row.DefaultCellStyle.BackColor = Color.LightCyan;
+                else row.DefaultCellStyle.BackColor = Color.White;
+            }
         }
 
         private void LoadUsersFromBinary()
@@ -111,15 +133,12 @@ namespace Navchpract_2
                             string login = br.ReadString();
                             string hashPass = br.ReadString();
                             bool isAdmin = br.ReadBoolean();
-
-                            // Адмін не може бути призначеним на подорож
                             if (!isAdmin) cmbAssignedUser.Items.Add(login);
                         }
                     }
                 }
-                catch (Exception ex) { MessageBox.Show("Помилка читання бази користувачів: " + ex.Message); }
+                catch (Exception ex) { MessageBox.Show("Помилка читання бази: " + ex.Message); }
             }
-
             if (cmbAssignedUser.Items.Count > 0) cmbAssignedUser.SelectedIndex = 0;
         }
 
@@ -129,7 +148,7 @@ namespace Navchpract_2
             numBudget.Minimum = 0; numBudget.Maximum = 1000000;
 
             cmbStatus.Items.Clear();
-            cmbStatus.Items.AddRange(new string[] { "Планується", "Завершено" });
+            cmbStatus.Items.AddRange(new string[] { "Запит", "Планується", "Очікує перевірки", "Завершено" });
             cmbStatus.SelectedIndex = 0;
 
             cmbFilterMode.Items.Clear();
@@ -139,12 +158,10 @@ namespace Navchpract_2
             txtSearch.Text = searchPlaceholder;
             txtSearch.ForeColor = Color.Gray;
 
-            // Події пошуку
             txtSearch.Enter += TxtSearch_Enter;
             txtSearch.Leave += TxtSearch_Leave;
             txtSearch.TextChanged += TxtSearch_TextChanged;
 
-            // Валідація вводу
             txtSearch.KeyPress += ReplaceDotWithComma_KeyPress;
             numBudget.KeyPress += ReplaceDotWithComma_KeyPress;
             numBudget.Leave += NumericUpDown_Leave;
@@ -164,24 +181,53 @@ namespace Navchpract_2
             };
         }
 
-        // --- ВАЛІДАТОРИ ТА ХЕЛПЕРИ ---
-        private void ReplaceDotWithComma_KeyPress(object sender, KeyPressEventArgs e) { if (e.KeyChar == '.') e.KeyChar = ','; }
-
-        private void NumericUpDown_Leave(object sender, EventArgs e)
+        // 🔥 МЕТОД ДЛЯ ПЕРЕВІРКИ ЗБЕРЕЖЕННЯ ПЕРЕД ЗАКРИТТЯМ
+        private bool PromptUnsavedChanges()
         {
-            NumericUpDown num = sender as NumericUpDown;
-            if (num != null && string.IsNullOrWhiteSpace(num.Text)) { num.Value = num.Minimum; num.Text = num.Minimum.ToString(); }
-        }
-
-        private void AutoCapitalize_Leave(object sender, EventArgs e)
-        {
-            TextBox txt = sender as TextBox;
-            if (!string.IsNullOrWhiteSpace(txt?.Text))
+            if (hasUnsavedChanges)
             {
-                TextInfo textInfo = new CultureInfo("uk-UA", false).TextInfo;
-                txt.Text = textInfo.ToTitleCase(txt.Text.ToLower().Trim());
+                DialogResult res = MessageBox.Show("У вас є незбережені зміни! Хочете зберегти їх перед виходом?", "Увага, дані можуть бути втрачені", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+                if (res == DialogResult.Yes)
+                {
+                    SaveToXML();
+                    return true;
+                }
+                else if (res == DialogResult.No)
+                {
+                    return true; // Виходимо без збереження
+                }
+                else
+                {
+                    return false; // Відміна виходу
+                }
             }
+            return true;
         }
+
+        private void btnOpenFeed_Click(object sender, EventArgs e)
+        {
+            if (hasUnsavedChanges)
+            {
+                DialogResult res = MessageBox.Show("Зберегти поточні зміни перед переходом до стрічки?", "Збереження", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                if (res == DialogResult.Yes) { SaveToXML(); }
+                else if (res == DialogResult.Cancel) { return; }
+            }
+
+            UserFeedForm feedForm = new UserFeedForm(new CUser(Session.Username, "", true));
+            this.Hide();
+            feedForm.ShowDialog();
+            this.Show();
+
+            travelTable.Clear();
+            if (File.Exists(xmlFilePath)) travelTable.ReadXml(xmlFilePath);
+            dgvData.DataSource = travelTable;
+            chartTravel.DataBind();
+            hasUnsavedChanges = false;
+        }
+
+        private void ReplaceDotWithComma_KeyPress(object sender, KeyPressEventArgs e) { if (e.KeyChar == '.') e.KeyChar = ','; }
+        private void NumericUpDown_Leave(object sender, EventArgs e) { NumericUpDown num = sender as NumericUpDown; if (num != null && string.IsNullOrWhiteSpace(num.Text)) { num.Value = num.Minimum; num.Text = num.Minimum.ToString(); } }
+        private void AutoCapitalize_Leave(object sender, EventArgs e) { TextBox txt = sender as TextBox; if (!string.IsNullOrWhiteSpace(txt?.Text)) { TextInfo textInfo = new CultureInfo("uk-UA", false).TextInfo; txt.Text = textInfo.ToTitleCase(txt.Text.ToLower().Trim()); } }
 
         private void DgvData_SelectionChanged(object sender, EventArgs e)
         {
@@ -204,42 +250,23 @@ namespace Navchpract_2
         private void CalculateAverageCityRating(string country, string city)
         {
             if (lblAverageRating == null) return;
-
             string filter = $"Країна = '{country.Replace("'", "''")}' AND Місто = '{city.Replace("'", "''")}' AND Статус = 'Завершено'";
             DataRow[] cityTrips = travelTable.Select(filter);
-
             if (cityTrips.Length > 0)
             {
                 double sum = 0; int count = 0;
-                foreach (DataRow r in cityTrips)
-                {
-                    if (r["Оцінка"] != DBNull.Value && Convert.ToInt32(r["Оцінка"]) > 0)
-                    {
-                        sum += Convert.ToDouble(r["Оцінка"]);
-                        count++;
-                    }
-                }
-
-                if (count > 0)
-                {
-                    lblAverageRating.Text = $"⭐ Рейтинг: {(sum / count):F1} / 10 (відгуків: {count})";
-                    lblAverageRating.ForeColor = Color.DimGray;
-                }
+                foreach (DataRow r in cityTrips) { if (r["Оцінка"] != DBNull.Value && Convert.ToInt32(r["Оцінка"]) > 0) { sum += Convert.ToDouble(r["Оцінка"]); count++; } }
+                if (count > 0) { lblAverageRating.Text = $"⭐ Рейтинг: {(sum / count):F1} / 10 (відгуків: {count})"; lblAverageRating.ForeColor = Color.DimGray; }
                 else lblAverageRating.Text = "⭐ Оцінок ще немає";
             }
-            else
-            {
-                lblAverageRating.Text = "⭐ Немає завершених поїздок";
-                lblAverageRating.ForeColor = Color.Gray;
-            }
+            else { lblAverageRating.Text = "⭐ Немає завершених поїздок"; lblAverageRating.ForeColor = Color.Gray; }
         }
 
-        // --- CRUD ОПЕРАЦІЇ ---
         private void btnAdd_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtCountry.Text) || string.IsNullOrWhiteSpace(txtCity.Text)) return;
-            travelTable.Rows.Add(null, cmbAssignedUser.SelectedItem.ToString(), txtCountry.Text, txtCity.Text, numBudget.Value, cmbStatus.SelectedItem.ToString(), 0, "");
-            SaveAndRefresh();
+            travelTable.Rows.Add(null, cmbAssignedUser.SelectedItem.ToString(), txtCountry.Text, txtCity.Text, numBudget.Value, cmbStatus.SelectedItem.ToString(), 1, "");
+            RegisterChange();
         }
 
         private void btnEdit_Click(object sender, EventArgs e)
@@ -252,7 +279,7 @@ namespace Navchpract_2
                 row["Місто"] = txtCity.Text;
                 row["Бюджет"] = numBudget.Value;
                 row["Статус"] = cmbStatus.SelectedItem.ToString();
-                SaveAndRefresh();
+                RegisterChange();
             }
         }
 
@@ -264,43 +291,62 @@ namespace Navchpract_2
                 {
                     var row = (DataRowView)dgvData.SelectedRows[0].DataBoundItem;
                     row.Row.Delete();
-                    SaveAndRefresh();
+                    RegisterChange();
                 }
             }
         }
 
-        private void SaveAndRefresh()
+        // Встановлюємо прапорець, що є зміни, але НЕ пишемо відразу в XML
+        private void RegisterChange()
         {
+            hasUnsavedChanges = true;
             travelTable.AcceptChanges();
-            travelTable.WriteXml(xmlFilePath, XmlWriteMode.WriteSchema);
             chartTravel.DataBind();
         }
 
-        // --- ПОШУК ---
+        private void SaveToXML()
+        {
+            travelTable.AcceptChanges();
+            travelTable.WriteXml(xmlFilePath, XmlWriteMode.WriteSchema);
+            hasUnsavedChanges = false;
+        }
+
         private void TxtSearch_Enter(object sender, EventArgs e) { if (txtSearch.Text == searchPlaceholder) { txtSearch.Text = ""; txtSearch.ForeColor = Color.Black; } }
         private void TxtSearch_Leave(object sender, EventArgs e) { if (string.IsNullOrWhiteSpace(txtSearch.Text)) { txtSearch.Text = searchPlaceholder; txtSearch.ForeColor = Color.Gray; } }
-        private void TxtSearch_TextChanged(object sender, EventArgs e)
+        private void TxtSearch_TextChanged(object sender, EventArgs e) => ApplyFilters();
+
+        private void ApplyFilters()
         {
             string raw = txtSearch.Text.Trim().Replace("'", "''");
-            if (raw == searchPlaceholder || string.IsNullOrWhiteSpace(raw)) { travelTable.DefaultView.RowFilter = ""; return; }
+            string searchFilter = "";
 
-            string mode = cmbFilterMode.SelectedItem?.ToString();
-            try
+            if (raw != searchPlaceholder && !string.IsNullOrWhiteSpace(raw))
             {
-                if (mode == "Усі поля") travelTable.DefaultView.RowFilter = $"(Країна LIKE '%{raw}%' OR Місто LIKE '%{raw}%' OR Користувач LIKE '%{raw}%')";
-                else travelTable.DefaultView.RowFilter = $"{mode} LIKE '%{raw}%'";
+                string mode = cmbFilterMode.SelectedItem?.ToString();
+                if (mode == "Усі поля") searchFilter = $"(Країна LIKE '%{raw}%' OR Місто LIKE '%{raw}%' OR Користувач LIKE '%{raw}%')";
+                else searchFilter = $"{mode} LIKE '%{raw}%'";
             }
-            catch { travelTable.DefaultView.RowFilter = ""; }
+
+            string statusFilter = chkOnlyRequests.Checked ? "(Статус = 'Запит' OR Статус = 'Очікує перевірки')" : "";
+
+            if (!string.IsNullOrEmpty(searchFilter) && !string.IsNullOrEmpty(statusFilter)) travelTable.DefaultView.RowFilter = $"{searchFilter} AND {statusFilter}";
+            else if (!string.IsNullOrEmpty(searchFilter)) travelTable.DefaultView.RowFilter = searchFilter;
+            else if (!string.IsNullOrEmpty(statusFilter)) travelTable.DefaultView.RowFilter = statusFilter;
+            else travelTable.DefaultView.RowFilter = "";
         }
 
-        private void btnClear_Click(object sender, EventArgs e)
+        private void btnClear_Click(object sender, EventArgs e) { txtCountry.Clear(); txtCity.Clear(); numBudget.Value = 0; lblAverageRating.Text = "⭐ Рейтинг міста: ..."; }
+
+        private void btnExportXML_Click(object sender, EventArgs e)
         {
-            txtCountry.Clear(); txtCity.Clear(); numBudget.Value = 0;
-            lblAverageRating.Text = "⭐ Рейтинг міста: ...";
+            SaveToXML();
+            MessageBox.Show("Всі зміни успішно збережені в XML!", "Збережено", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        private void btnExportXML_Click(object sender, EventArgs e) => SaveAndRefresh();
-        private void btnImportXML_Click(object sender, EventArgs e) { if (File.Exists(xmlFilePath)) { travelTable.Clear(); travelTable.ReadXml(xmlFilePath); SaveAndRefresh(); } }
+        private void btnImportXML_Click(object sender, EventArgs e)
+        {
+            if (File.Exists(xmlFilePath)) { travelTable.Clear(); travelTable.ReadXml(xmlFilePath); SaveToXML(); chartTravel.DataBind(); }
+        }
 
         private void SetupChart()
         {
@@ -317,18 +363,18 @@ namespace Navchpract_2
             {
                 g.Clear(Color.AliceBlue);
                 using (Font f = new Font("Segoe UI Emoji", 48))
-                    g.DrawString(status == "Завершено" ? "🛬" : "🛫", f, Brushes.Black, new PointF(10, 10));
+                    g.DrawString(status == "Завершено" ? "🛬" : (status == "Запит" || status == "Очікує перевірки" ? "📩" : "🛫"), f, Brushes.Black, new PointF(10, 10));
             }
             pbPlane.Image = bmp;
         }
 
-        // --- УПРАВЛІННЯ ФОРМОЮ ---
-        private void pbBack_Click(object sender, EventArgs e) => this.Close();
-        private void pbExit_Click(object sender, EventArgs e) => Application.Exit();
+        // 🔥 ПЕРЕВІРКА ПРИ ВИХОДІ
+        private void pbBack_Click(object sender, EventArgs e) { if (PromptUnsavedChanges()) this.Close(); }
+        private void pbExit_Click(object sender, EventArgs e) { if (PromptUnsavedChanges()) Application.Exit(); }
+
         private void pnlHeader_MouseDown(object sender, MouseEventArgs e) { dragging = true; dragCursorPoint = System.Windows.Forms.Cursor.Position; dragFormPoint = this.Location; }
         private void pnlHeader_MouseMove(object sender, MouseEventArgs e) { if (dragging) { Point dif = Point.Subtract(System.Windows.Forms.Cursor.Position, new Size(dragCursorPoint)); this.Location = Point.Add(dragFormPoint, new Size(dif)); } }
         private void pnlHeader_MouseUp(object sender, MouseEventArgs e) => dragging = false;
-
         private void ctxMenuEdit_Click(object sender, EventArgs e) => MessageBox.Show("Використовуйте панель зліва.");
         private void ctxMenuDelete_Click(object sender, EventArgs e) => btnDelete_Click(null, null);
     }

@@ -312,5 +312,15 @@ namespace Navchpract_2.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Знімок_екрана_2026_03_04_110025 {
+            get {
+                object obj = ResourceManager.GetObject("Знімок екрана 2026-03-04 110025", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }

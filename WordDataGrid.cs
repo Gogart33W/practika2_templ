@@ -435,12 +435,11 @@ namespace Navchpract_2
             if (MessageBox.Show("Вихід?", "", MessageBoxButtons.YesNo) == DialogResult.Yes) Application.Exit();
         }
 
-        // ТУТ БУВ БАГ! ТЕПЕР ФОРМА ПРОСТО ЗАКРИВАЄТЬСЯ І ЛОГІН НЕ ЗЛІТАЄ
         private void pictureBox1_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show("В меню?", "", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                this.Close(); // ТІЛЬКИ ЦЕЙ РЯДОК!
+                this.Close();
             }
         }
 
