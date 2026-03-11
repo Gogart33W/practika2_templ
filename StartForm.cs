@@ -50,7 +50,22 @@ namespace Navchpract_2
 
             if (третійТижденьToolStripMenuItem != null)
             {
-                третійТижденьToolStripMenuItem.Visible = currentUser.IsAdmin;
+                третійТижденьToolStripMenuItem.Visible = true;
+            }
+
+            if (практична31ToolStripMenuItem != null)
+            {
+                практична31ToolStripMenuItem.Visible = currentUser.IsAdmin;
+            }
+
+            if (графікиToolStripMenuItem != null)
+            {
+                графікиToolStripMenuItem.Visible = true;
+            }
+
+            if (четвертийТижденьToolStripMenuItem != null)
+            {
+                четвертийТижденьToolStripMenuItem.Visible = true;
             }
         }
 
@@ -77,10 +92,13 @@ namespace Navchpract_2
                 module.ShowDialog();
             }
 
-            this.Show();
+            if (!this.IsDisposed)
+            {
+                this.Show();
+            }
         }
-
         private void практична11ToolStripMenuItem_Click(object sender, EventArgs e) { OpenModule<Form1>(); }
+
         private void практична12ToolStripMenuItem_Click(object sender, EventArgs e) { OpenModule<Pract1_2>(); }
         private void практична21ToolStripMenuItem_Click(object sender, EventArgs e) { OpenModule<WordDataGrid>(); }
         private void indZavd1ToolStripMenuItem_Click(object sender, EventArgs e) { OpenModule<IndZavd1>(); }
@@ -96,10 +114,13 @@ namespace Navchpract_2
                 adminForm.StartPosition = FormStartPosition.CenterScreen;
                 adminForm.ShowDialog();
             }
-            this.Show();
+
+            if (!this.IsDisposed)
+            {
+                this.Show();
+            }
         }
 
-        // 🔥 КНОПКА ГРАФІКІВ
         private void графікиToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenModule<Grahic>();
@@ -128,7 +149,22 @@ namespace Navchpract_2
                 }
             }
 
-            this.Show();
+            if (!this.IsDisposed)
+            {
+                this.Show();
+            }
+        }
+
+        private void четвертийТижденьToolStripMenuItem_Click(object sender, EventArgs e) { }
+
+        private void практична41ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenModule<TimerForm>();
+        }
+
+        private void практична42ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenModule<Tree>();
         }
 
         private void btnLogout_Click(object sender, EventArgs e)

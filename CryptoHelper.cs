@@ -23,7 +23,6 @@ namespace Navchpract_2
         public static string HashPassword(string password)
         {
             byte[] salt = GenerateRandomBytes(SALT_SIZE);
-
             byte[] hash = Derive(password, salt, CURRENT_ITERATIONS);
 
             return FORMAT_VERSION + "$" +
@@ -139,7 +138,6 @@ namespace Navchpract_2
             return bytes;
         }
 
-        // МЕТОД ДЛЯ ТИМЧАСОВИХ ПАРОЛІВ (SHA1) 
         public static string HashTempPasswordSHA1(string password)
         {
             using (SHA1 sha1 = SHA1.Create())

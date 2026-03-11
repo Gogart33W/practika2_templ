@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace Navchpract_2
 {
@@ -13,7 +14,7 @@ namespace Navchpract_2
         public decimal Price { get; set; }
         public string OwnerName { get; set; }
 
-        public string ToTxtString() => $"{Id}|{Address}|{Type}|{Area}|{Rooms}|{Price}|{OwnerName}";
+        public string ToTxtString() => $"{Id}|{Address}|{Type}|{Area.ToString(CultureInfo.InvariantCulture)}|{Rooms}|{Price.ToString(CultureInfo.InvariantCulture)}|{OwnerName}";
 
         public static RealEstate FromTxtString(string line)
         {
@@ -21,18 +22,22 @@ namespace Navchpract_2
             {
                 var p = line.Split('|');
                 if (p.Length < 7) return null;
+
                 return new RealEstate
                 {
                     Id = Guid.Parse(p[0]),
                     Address = p[1],
                     Type = p[2],
-                    Area = double.Parse(p[3]),
+                    Area = double.Parse(p[3], CultureInfo.InvariantCulture),
                     Rooms = int.Parse(p[4]),
-                    Price = decimal.Parse(p[5]),
+                    Price = decimal.Parse(p[5], CultureInfo.InvariantCulture),
                     OwnerName = p[6]
                 };
             }
-            catch { return null; }
+            catch
+            {
+                return null;
+            }
         }
     }
 }

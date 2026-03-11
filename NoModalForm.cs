@@ -20,8 +20,8 @@ namespace Navchpract_2
 
         private void FillGlobal()
         {
-            textBoxNumericM3.Text = DataValue.Numeric;
-            textBoxTextM3.Text = DataValue.Text;
+            textBoxNumericM3.Text = MyClass.number.ToString();
+            textBoxTextM3.Text = MyClass.str;
         }
 
         public string MyStr_Numeric
@@ -45,7 +45,10 @@ namespace Navchpract_2
         {
             DialogResult rez = MessageBox.Show("Закрити немодальне вікно?", "Запитання",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (rez == DialogResult.Yes) this.Close();
+            if (rez == DialogResult.Yes)
+            {
+                this.Close();
+            }
         }
     }
 }

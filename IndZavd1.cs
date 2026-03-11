@@ -29,8 +29,10 @@ namespace Navchpract_2
 
         private void IndZavd1_Load(object sender, EventArgs e)
         {
-            pbBack.BackColor = Color.Transparent; pbExit.BackColor = Color.Transparent;
-            pbBack.SizeMode = PictureBoxSizeMode.Zoom; pbExit.SizeMode = PictureBoxSizeMode.Zoom;
+            pbBack.BackColor = Color.Transparent;
+            pbExit.BackColor = Color.Transparent;
+            pbBack.SizeMode = PictureBoxSizeMode.Zoom;
+            pbExit.SizeMode = PictureBoxSizeMode.Zoom;
 
             dgvData.DataSource = _displayData;
             dgvData.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
@@ -49,10 +51,17 @@ namespace Navchpract_2
             if (dgvData.Columns["Price"] != null) dgvData.Columns["Price"].HeaderText = "Ціна ($)";
             if (dgvData.Columns["OwnerName"] != null) dgvData.Columns["OwnerName"].HeaderText = "Власник";
 
-            // --- КРАСИВІ ЧИСЛА ТА ОБМЕЖЕННЯ ---
-            numRooms.DecimalPlaces = 0; numRooms.Minimum = 1; numRooms.Maximum = 100;
-            numArea.DecimalPlaces = 2; numArea.Minimum = 0.01m; numArea.Maximum = 10000;
-            numPrice.DecimalPlaces = 2; numPrice.Minimum = 0.01m; numPrice.Maximum = 100000000;
+            numRooms.DecimalPlaces = 0;
+            numRooms.Minimum = 1;
+            numRooms.Maximum = 100;
+
+            numArea.DecimalPlaces = 2;
+            numArea.Minimum = 0.01m;
+            numArea.Maximum = 10000m;
+
+            numPrice.DecimalPlaces = 2;
+            numPrice.Minimum = 0.01m;
+            numPrice.Maximum = 100000000m;
 
             numArea.ThousandsSeparator = true;
             numPrice.ThousandsSeparator = true;
@@ -69,7 +78,6 @@ namespace Navchpract_2
             txtSearch.ForeColor = Color.Gray;
             lblSearch.Text = "Фільтр:";
 
-            // --- ПІДКЛЮЧЕННЯ ПОДІЙ ---
             cmbType.SelectedIndexChanged += CmbType_SelectedIndexChanged;
             txtAddress.KeyPress += TxtAddress_KeyPress;
             txtAddress.Leave += txtAddress_Leave;
@@ -79,6 +87,7 @@ namespace Navchpract_2
 
             txtSearch.Enter += TxtSearch_Enter;
             txtSearch.Leave += TxtSearch_Leave;
+            txtSearch.TextChanged += txtSearch_TextChanged;
             txtSearch.KeyPress += ReplaceDotWithComma_KeyPress;
 
             numArea.KeyPress += ReplaceDotWithComma_KeyPress;
@@ -87,9 +96,12 @@ namespace Navchpract_2
             numRooms.Leave += Numeric_Leave;
             numArea.Leave += Numeric_Leave;
             numPrice.Leave += Numeric_Leave;
+
+            cmbFilterMode.SelectedIndexChanged += cmbFilterMode_SelectedIndexChanged;
+            dgvData.SelectionChanged += dgvData_SelectionChanged;
+            dgvData.CellDoubleClick += dgvData_CellDoubleClick;
         }
 
-        // --- ЛОГІКА ЗЕМЛІ ТА КІМНАТ ---
         private void CmbType_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cmbType.Text == "Земля")
@@ -113,17 +125,13 @@ namespace Navchpract_2
 
         private void Numeric_Leave(object sender, EventArgs e)
         {
-            // Якщо людина просто стерла все бекспейсом і пішла на інше поле, 
-            // ми не даємо йому зламатись, а ставимо мінімальне допустиме значення
-            NumericUpDown num = sender as NumericUpDown;
-            if (num != null && string.IsNullOrWhiteSpace(num.Text))
+            if (sender is NumericUpDown num && string.IsNullOrWhiteSpace(num.Text))
             {
                 num.Value = num.Minimum;
                 num.Text = num.Minimum.ToString();
             }
         }
 
-        // --- ЗАХИСТ І ФОРМАТУВАННЯ ---
         private void TxtAddress_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsLetterOrDigit(e.KeyChar) && !char.IsControl(e.KeyChar) &&
@@ -170,7 +178,6 @@ namespace Navchpract_2
             }
         }
 
-        // --- ЛОГІКА ПОШУКУ  ---
         private void TxtSearch_Enter(object sender, EventArgs e)
         {
             if (txtSearch.Text == searchPlaceholder)
@@ -212,9 +219,9 @@ namespace Navchpract_2
             else if (searchStr.StartsWith("<")) { op = "<"; searchStr = searchStr.Substring(1); }
             else if (searchStr.StartsWith("=")) { op = "="; searchStr = searchStr.Substring(1); }
 
-            searchStr = searchStr.Trim().Replace('.', ',');
+            searchStr = searchStr.Trim().Replace(',', '.');
 
-            if (double.TryParse(searchStr, out double target))
+            if (double.TryParse(searchStr, NumberStyles.Any, CultureInfo.InvariantCulture, out double target))
             {
                 switch (op)
                 {
@@ -257,28 +264,30 @@ namespace Navchpract_2
                 return matchAddress || matchType || matchOwner || matchRoomsExact || matchPriceExact;
             }).ToList();
 
+            _displayData.RaiseListChangedEvents = false;
             _displayData.Clear();
             foreach (var item in filtered) _displayData.Add(item);
+            _displayData.RaiseListChangedEvents = true;
+            _displayData.ResetBindings();
         }
 
         private void RefreshData() => ApplyFilter();
 
-        // --- ВЗАЄМОДІЯ З ТАБЛИЦЕЮ ---
         private void dgvData_SelectionChanged(object sender, EventArgs e)
         {
             if (dgvData.SelectedRows.Count > 0)
             {
-                var selected = dgvData.SelectedRows[0].DataBoundItem as RealEstate;
-                if (selected == null) return;
+                if (dgvData.SelectedRows[0].DataBoundItem is RealEstate selected)
+                {
+                    txtAddress.Text = selected.Address ?? "";
+                    if (selected.Type != null && cmbType.Items.Contains(selected.Type)) cmbType.SelectedItem = selected.Type;
 
-                txtAddress.Text = selected.Address ?? "";
-                if (selected.Type != null && cmbType.Items.Contains(selected.Type)) cmbType.SelectedItem = selected.Type;
+                    numArea.Value = selected.Area >= (double)numArea.Minimum ? (decimal)selected.Area : numArea.Minimum;
+                    numRooms.Value = selected.Rooms >= numRooms.Minimum ? selected.Rooms : numRooms.Minimum;
+                    numPrice.Value = selected.Price >= numPrice.Minimum ? selected.Price : numPrice.Minimum;
 
-                numArea.Value = selected.Area >= (double)numArea.Minimum ? (decimal)selected.Area : numArea.Minimum;
-                numRooms.Value = selected.Rooms >= numRooms.Minimum ? selected.Rooms : numRooms.Minimum;
-                numPrice.Value = selected.Price >= numPrice.Minimum ? selected.Price : numPrice.Minimum;
-
-                txtOwner.Text = selected.OwnerName ?? "";
+                    txtOwner.Text = selected.OwnerName ?? "";
+                }
             }
         }
 
@@ -290,7 +299,6 @@ namespace Navchpract_2
         private void ctxMenuEdit_Click(object sender, EventArgs e) => dgvData_CellDoubleClick(null, null);
         private void ctxMenuDelete_Click(object sender, EventArgs e) => btnDelete_Click(null, null);
 
-        // --- ВАЛІДАЦІЯ ---
         private bool ValidateInputs()
         {
             txtAddress.Text = txtAddress.Text.Trim();
@@ -309,7 +317,6 @@ namespace Navchpract_2
             return true;
         }
 
-        // --- CRUD ЛОГІКА ---
         private void btnAdd_Click(object sender, EventArgs e)
         {
             btnAdd.Focus();
@@ -322,7 +329,16 @@ namespace Navchpract_2
                 return;
             }
 
-            var newObj = new RealEstate { Address = txtAddress.Text, Type = cmbType.Text, Area = (double)numArea.Value, Rooms = (int)numRooms.Value, Price = numPrice.Value, OwnerName = txtOwner.Text };
+            var newObj = new RealEstate
+            {
+                Address = txtAddress.Text,
+                Type = cmbType.Text,
+                Area = (double)numArea.Value,
+                Rooms = (int)numRooms.Value,
+                Price = numPrice.Value,
+                OwnerName = txtOwner.Text
+            };
+
             _masterData.Add(newObj);
             RefreshData();
             ClearInputs();
@@ -333,21 +349,23 @@ namespace Navchpract_2
             btnEdit.Focus();
 
             if (dgvData.SelectedRows.Count == 0) return;
-            var selected = dgvData.SelectedRows[0].DataBoundItem as RealEstate;
-            if (selected == null || !ValidateInputs()) return;
 
-            var masterItem = _masterData.FirstOrDefault(x => x.Id == selected.Id);
-            if (masterItem != null)
+            if (dgvData.SelectedRows[0].DataBoundItem is RealEstate selected && ValidateInputs())
             {
-                masterItem.Address = txtAddress.Text;
-                masterItem.Type = cmbType.Text;
-                masterItem.Area = (double)numArea.Value;
-                masterItem.Rooms = (int)numRooms.Value;
-                masterItem.Price = numPrice.Value;
-                masterItem.OwnerName = txtOwner.Text;
-                RefreshData();
-                MessageBox.Show("Запис успішно оновлено!", "Готово", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                ClearInputs();
+                var masterItem = _masterData.FirstOrDefault(x => x.Id == selected.Id);
+                if (masterItem != null)
+                {
+                    masterItem.Address = txtAddress.Text;
+                    masterItem.Type = cmbType.Text;
+                    masterItem.Area = (double)numArea.Value;
+                    masterItem.Rooms = (int)numRooms.Value;
+                    masterItem.Price = numPrice.Value;
+                    masterItem.OwnerName = txtOwner.Text;
+
+                    RefreshData();
+                    MessageBox.Show("Запис успішно оновлено!", "Готово", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    ClearInputs();
+                }
             }
         }
 
@@ -355,8 +373,8 @@ namespace Navchpract_2
         {
             if (dgvData.SelectedRows.Count > 0)
             {
-                var selected = dgvData.SelectedRows[0].DataBoundItem as RealEstate;
-                if (selected != null && MessageBox.Show($"Ви дійсно хочете видалити об'єкт за адресою:\n{selected.Address}?", "Увага", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                if (dgvData.SelectedRows[0].DataBoundItem is RealEstate selected &&
+                    MessageBox.Show($"Ви дійсно хочете видалити об'єкт за адресою:\n{selected.Address}?", "Увага", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                 {
                     _masterData.RemoveAll(x => x.Id == selected.Id);
                     RefreshData();
@@ -365,19 +383,26 @@ namespace Navchpract_2
             }
         }
 
-        // --- ФАЙЛИ ---
         private void btnSaveBin_Click(object sender, EventArgs e)
         {
             using (SaveFileDialog sfd = new SaveFileDialog { Filter = "BIN|*.bin" })
+            {
                 if (sfd.ShowDialog() == DialogResult.OK)
+                {
                     using (FileStream fs = new FileStream(sfd.FileName, FileMode.Create))
+                    {
                         new BinaryFormatter().Serialize(fs, _masterData);
+                    }
+                }
+            }
         }
 
         private void btnLoadBin_Click(object sender, EventArgs e)
         {
             using (OpenFileDialog ofd = new OpenFileDialog { Filter = "BIN|*.bin" })
+            {
                 if (ofd.ShowDialog() == DialogResult.OK)
+                {
                     try
                     {
                         using (FileStream fs = new FileStream(ofd.FileName, FileMode.Open))
@@ -388,33 +413,49 @@ namespace Navchpract_2
                             RefreshData();
                         }
                     }
-                    catch { MessageBox.Show("Помилка читання файлу!", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+                    catch
+                    {
+                        MessageBox.Show("Помилка читання файлу!", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
         }
 
         private void btnExportTxt_Click(object sender, EventArgs e)
         {
             using (SaveFileDialog sfd = new SaveFileDialog { Filter = "TXT|*.txt" })
+            {
                 if (sfd.ShowDialog() == DialogResult.OK)
+                {
                     using (StreamWriter sw = new StreamWriter(sfd.FileName))
+                    {
                         foreach (var i in _masterData) sw.WriteLine(i.ToTxtString());
+                    }
+                }
+            }
         }
 
         private void btnImportTxt_Click(object sender, EventArgs e)
         {
             using (OpenFileDialog ofd = new OpenFileDialog { Filter = "TXT|*.txt" })
+            {
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
-                    _masterData.Clear();
-                    foreach (var l in File.ReadAllLines(ofd.FileName))
+                    var lines = File.ReadAllLines(ofd.FileName);
+                    if (lines.Length > 0)
                     {
-                        var o = RealEstate.FromTxtString(l);
-                        if (o != null) _masterData.Add(o);
+                        _masterData.Clear();
+                        foreach (var l in lines)
+                        {
+                            var o = RealEstate.FromTxtString(l);
+                            if (o != null) _masterData.Add(o);
+                        }
+                        RefreshData();
                     }
-                    RefreshData();
                 }
+            }
         }
 
-        // --- ДІАЛОГИ ПРИ ВИХОДІ ---
         private void pbBack_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show("Ви дійсно хочете повернутися до головного меню? Переконайтеся, що ви зберегли дані у файл.", "Повернення", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
@@ -441,9 +482,25 @@ namespace Navchpract_2
             dgvData.ClearSelection();
         }
 
-        // Перетягування вікна
-        private void pnlHeader_MouseDown(object sender, MouseEventArgs e) { dragging = true; dragCursorPoint = Cursor.Position; dragFormPoint = this.Location; }
-        private void pnlHeader_MouseMove(object sender, MouseEventArgs e) { if (dragging) { Point dif = Point.Subtract(Cursor.Position, new Size(dragCursorPoint)); this.Location = Point.Add(dragFormPoint, new Size(dif)); } }
-        private void pnlHeader_MouseUp(object sender, MouseEventArgs e) { dragging = false; }
+        private void pnlHeader_MouseDown(object sender, MouseEventArgs e)
+        {
+            dragging = true;
+            dragCursorPoint = Cursor.Position;
+            dragFormPoint = this.Location;
+        }
+
+        private void pnlHeader_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (dragging)
+            {
+                Point dif = Point.Subtract(Cursor.Position, new Size(dragCursorPoint));
+                this.Location = Point.Add(dragFormPoint, new Size(dif));
+            }
+        }
+
+        private void pnlHeader_MouseUp(object sender, MouseEventArgs e)
+        {
+            dragging = false;
+        }
     }
 }

@@ -52,3 +52,5 @@ D:\Study\Kyrop\practika 2\practika 2\Navchpract#2\Navchpract#2\obj\Debug\Navchpr
 D:\Study\Kyrop\practika 2\practika 2\Navchpract#2\Navchpract#2\obj\Debug\Navchpract_2.Session.resources
 D:\Study\Kyrop\practika 2\practika 2\Navchpract#2\Navchpract#2\obj\Debug\Navchpract_2.UserFeedForm.resources
 D:\Study\Kyrop\practika 2\practika 2\Navchpract#2\Navchpract#2\obj\Debug\Navchpract_2.Grahic.resources
+D:\Study\Kyrop\practika 2\practika 2\Navchpract#2\Navchpract#2\obj\Debug\Navchpract_2.TimerForm.resources
+D:\Study\Kyrop\practika 2\practika 2\Navchpract#2\Navchpract#2\obj\Debug\Navchpract_2.Tree.resources

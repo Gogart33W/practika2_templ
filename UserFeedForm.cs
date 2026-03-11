@@ -30,7 +30,6 @@ namespace Navchpract_2
             string roleLabel = Session.Role == "Admin" ? "[МОДЕРАТОР]" : "";
             lblTitle.Text = $"Travel Hub | {Session.Username} {roleLabel}";
 
-            // 🔥 ВИРІЗАЄМО ВКЛАДКУ "МОЇ ПОДОРОЖІ" ДЛЯ АДМІНА З КІНЦЯМИ
             if (Session.Role == "Admin")
             {
                 tabControlFeed.TabPages.Remove(tabMyTrips);
@@ -238,7 +237,6 @@ namespace Navchpract_2
                     btnEdit.Text = "💾 Зберегти";
                     btnEdit.BackColor = Color.ForestGreen;
 
-                    btnEdit.Click -= null;
                     btnEdit.Click += (sender2, e2) =>
                     {
                         row["Коментар"] = txtEdit.Text;

@@ -131,7 +131,7 @@ namespace Navchpract_2
                         for (int i = 0; i < count; i++)
                         {
                             string login = br.ReadString();
-                            string hashPass = br.ReadString();
+                            br.ReadString();
                             bool isAdmin = br.ReadBoolean();
                             if (!isAdmin) cmbAssignedUser.Items.Add(login);
                         }
@@ -181,7 +181,6 @@ namespace Navchpract_2
             };
         }
 
-        // 🔥 МЕТОД ДЛЯ ПЕРЕВІРКИ ЗБЕРЕЖЕННЯ ПЕРЕД ЗАКРИТТЯМ
         private bool PromptUnsavedChanges()
         {
             if (hasUnsavedChanges)
@@ -194,11 +193,11 @@ namespace Navchpract_2
                 }
                 else if (res == DialogResult.No)
                 {
-                    return true; // Виходимо без збереження
+                    return true;
                 }
                 else
                 {
-                    return false; // Відміна виходу
+                    return false;
                 }
             }
             return true;
@@ -226,8 +225,26 @@ namespace Navchpract_2
         }
 
         private void ReplaceDotWithComma_KeyPress(object sender, KeyPressEventArgs e) { if (e.KeyChar == '.') e.KeyChar = ','; }
-        private void NumericUpDown_Leave(object sender, EventArgs e) { NumericUpDown num = sender as NumericUpDown; if (num != null && string.IsNullOrWhiteSpace(num.Text)) { num.Value = num.Minimum; num.Text = num.Minimum.ToString(); } }
-        private void AutoCapitalize_Leave(object sender, EventArgs e) { TextBox txt = sender as TextBox; if (!string.IsNullOrWhiteSpace(txt?.Text)) { TextInfo textInfo = new CultureInfo("uk-UA", false).TextInfo; txt.Text = textInfo.ToTitleCase(txt.Text.ToLower().Trim()); } }
+
+        private void NumericUpDown_Leave(object sender, EventArgs e)
+        {
+            NumericUpDown num = sender as NumericUpDown;
+            if (num != null && string.IsNullOrWhiteSpace(num.Text))
+            {
+                num.Value = num.Minimum;
+                num.Text = num.Minimum.ToString();
+            }
+        }
+
+        private void AutoCapitalize_Leave(object sender, EventArgs e)
+        {
+            TextBox txt = sender as TextBox;
+            if (!string.IsNullOrWhiteSpace(txt?.Text))
+            {
+                TextInfo textInfo = new CultureInfo("uk-UA", false).TextInfo;
+                txt.Text = textInfo.ToTitleCase(txt.Text.ToLower().Trim());
+            }
+        }
 
         private void DgvData_SelectionChanged(object sender, EventArgs e)
         {
@@ -256,10 +273,14 @@ namespace Navchpract_2
             {
                 double sum = 0; int count = 0;
                 foreach (DataRow r in cityTrips) { if (r["Оцінка"] != DBNull.Value && Convert.ToInt32(r["Оцінка"]) > 0) { sum += Convert.ToDouble(r["Оцінка"]); count++; } }
-                if (count > 0) { lblAverageRating.Text = $"⭐ Рейтинг: {(sum / count):F1} / 10 (відгуків: {count})"; lblAverageRating.ForeColor = Color.DimGray; }
-                else lblAverageRating.Text = "⭐ Оцінок ще немає";
+                if (count > 0)
+                {
+                    lblAverageRating.Text = $"⭐ Рейтинг: {(sum / count):F1} / 10\n(відгуків: {count})";
+                    lblAverageRating.ForeColor = Color.DimGray;
+                }
+                else lblAverageRating.Text = "⭐ Оцінок ще\nнемає";
             }
-            else { lblAverageRating.Text = "⭐ Немає завершених поїздок"; lblAverageRating.ForeColor = Color.Gray; }
+            else { lblAverageRating.Text = "⭐ Немає завершених\nпоїздок"; lblAverageRating.ForeColor = Color.Gray; }
         }
 
         private void btnAdd_Click(object sender, EventArgs e)
@@ -296,7 +317,6 @@ namespace Navchpract_2
             }
         }
 
-        // Встановлюємо прапорець, що є зміни, але НЕ пишемо відразу в XML
         private void RegisterChange()
         {
             hasUnsavedChanges = true;
@@ -368,7 +388,6 @@ namespace Navchpract_2
             pbPlane.Image = bmp;
         }
 
-        // 🔥 ПЕРЕВІРКА ПРИ ВИХОДІ
         private void pbBack_Click(object sender, EventArgs e) { if (PromptUnsavedChanges()) this.Close(); }
         private void pbExit_Click(object sender, EventArgs e) { if (PromptUnsavedChanges()) Application.Exit(); }
 

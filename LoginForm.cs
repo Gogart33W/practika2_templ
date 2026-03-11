@@ -58,15 +58,21 @@ namespace Navchpract_2
                 try
                 {
                     List<CUser> tempUsers = new List<CUser>();
-                    using (BinaryReader br = new BinaryReader(File.Open(binPath, FileMode.Open)))
+                    using (FileStream fs = new FileStream(binPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                     {
-                        int count = br.ReadInt32();
-                        for (int i = 0; i < count; i++)
+                        if (fs.Length > 0)
                         {
-                            string login = br.ReadString();
-                            string hashPass = br.ReadString();
-                            bool isAdmin = br.ReadBoolean();
-                            tempUsers.Add(new CUser(login, hashPass, isAdmin));
+                            using (BinaryReader br = new BinaryReader(fs))
+                            {
+                                int count = br.ReadInt32();
+                                for (int i = 0; i < count; i++)
+                                {
+                                    string login = br.ReadString();
+                                    string hashPass = br.ReadString();
+                                    bool isAdmin = br.ReadBoolean();
+                                    tempUsers.Add(new CUser(login, hashPass, isAdmin));
+                                }
+                            }
                         }
                     }
                     usersList = tempUsers;
@@ -81,7 +87,8 @@ namespace Navchpract_2
             {
                 try
                 {
-                    using (BinaryWriter bw = new BinaryWriter(File.Open(binPath, FileMode.Create)))
+                    using (FileStream fs = new FileStream(binPath, FileMode.Create, FileAccess.Write, FileShare.None))
+                    using (BinaryWriter bw = new BinaryWriter(fs))
                     {
                         bw.Write(usersList.Count);
                         foreach (var u in usersList)
@@ -150,7 +157,7 @@ namespace Navchpract_2
                     }
                     else
                     {
-                        tempPasswords.Remove(enteredLogin); 
+                        tempPasswords.Remove(enteredLogin);
                         MessageBox.Show("Термін дії тимчасового пароля (3 хв) минув!", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
@@ -195,7 +202,6 @@ namespace Navchpract_2
                 MessageBox.Show("Такого користувача не існує!", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-
 
             Random rnd = new Random();
             string tempPass = rnd.Next(100000, 999999).ToString();

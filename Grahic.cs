@@ -10,7 +10,6 @@ namespace Navchpract_2
 {
     public partial class Grahic : Form
     {
-        // ЦЕНТРУВАННЯ ЗА ПОЧАТКОМ КООРДИНАТ (0, 0)
         private float scale = 40f;
         private float offsetX = 0f;
         private float offsetY = 0f;
@@ -18,11 +17,9 @@ namespace Navchpract_2
         private const double BREAK_X = 8.0;
         private const double MAX_Y = 1000.0;
 
-        // Керування мишею для графіка
         private Point lastMousePos;
         private bool isDraggingGraph = false;
 
-        // Керування формою (перетягування)
         private bool isFormDragging = false;
         private Point dragCursorPoint;
         private Point dragFormPoint;
@@ -32,17 +29,20 @@ namespace Navchpract_2
             InitializeComponent();
             this.StartPosition = FormStartPosition.CenterScreen;
 
-            // Подвійна буферизація від лагів
             this.DoubleBuffered = true;
             typeof(Control).GetProperty("DoubleBuffered", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
                            ?.SetValue(pictureBox2, true, null);
 
-            // Події графіка
             pictureBox2.Paint += PictureBox2_Paint;
             pictureBox2.MouseWheel += PictureBox2_MouseWheel;
             pictureBox2.MouseDown += PictureBox2_MouseDown;
             pictureBox2.MouseMove += PictureBox2_MouseMove;
             pictureBox2.MouseUp += PictureBox2_MouseUp;
+
+            if (chart1 != null)
+            {
+                chart1.MouseWheel += Chart1_MouseWheel;
+            }
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -51,15 +51,11 @@ namespace Navchpract_2
             BuildChart();
         }
 
-        // ==========================================
-        // МАТЕМАТИКА (Варіант №11)
-        // ==========================================
         private double CalculateFunction(double x)
         {
             if (x < BREAK_X)
             {
                 double denom = -x * x + 10 * x - 16;
-                // Захист від ділення на нуль поблизу асимптот
                 if (Math.Abs(denom) < 1e-5) return double.NaN;
                 return Math.Pow(Math.Sin(x - 5), 2) / denom;
             }
@@ -70,15 +66,11 @@ namespace Navchpract_2
             }
         }
 
-        // Координати
         private float MathToScreenX(float x, int w) => w / 2f + offsetX + x * scale;
         private float MathToScreenY(float y, int h) => h / 2f + offsetY - y * scale;
         private float ScreenToMathX(float sx, int w) => (sx - w / 2f - offsetX) / scale;
         private float ScreenToMathY(float sy, int h) => (h / 2f + offsetY - sy) / scale;
 
-        // ==========================================
-        // ВЛАСНИЙ РЕНДЕР (БЕЗ ЛАГІВ)
-        // ==========================================
         private void PictureBox2_Paint(object sender, PaintEventArgs e)
         {
             Graphics g = e.Graphics;
@@ -88,7 +80,6 @@ namespace Navchpract_2
             int w = pictureBox2.Width;
             int h = pictureBox2.Height;
 
-            // 🔥 ВИПРАВЛЕНО: Читаємо межі графіка з текстових полів!
             float xSt = Parse(textBox1.Text, 6f);
             float xFi = Parse(textBox2.Text, 10f);
 
@@ -107,7 +98,6 @@ namespace Navchpract_2
             Font font = new Font("Segoe UI", 8, FontStyle.Bold);
             Brush brush = new SolidBrush(Color.FromArgb(100, 100, 100));
 
-            // Сітка X
             float startX = (float)Math.Floor(mathMinX / step) * step;
             for (float x = startX; x <= mathMaxX; x += step)
             {
@@ -116,7 +106,6 @@ namespace Navchpract_2
                 if (Math.Abs(x) > 0.001) g.DrawString(Math.Round(x, 2).ToString(), font, brush, sx + 2, MathToScreenY(0, h) + 2);
             }
 
-            // Сітка Y
             float startY = (float)Math.Floor(mathMinY / step) * step;
             for (float y = startY; y <= mathMaxY; y += step)
             {
@@ -125,13 +114,11 @@ namespace Navchpract_2
                 if (Math.Abs(y) > 0.001) g.DrawString(Math.Round(y, 2).ToString(), font, brush, MathToScreenX(0, w) + 2, sy - 15);
             }
 
-            // Осі
             float axisX = MathToScreenX(0, w);
             float axisY = MathToScreenY(0, h);
             g.DrawLine(axisPen, axisX, 0, axisX, h);
             g.DrawLine(axisPen, 0, axisY, w, axisY);
 
-            // ГРАФІК ПО ПІКСЕЛЯХ
             PointF? prevPoint = null;
             float? prevMathX = null;
 
@@ -139,7 +126,6 @@ namespace Navchpract_2
             {
                 float mathX = ScreenToMathX(sx, w);
 
-                // 🔥 ВИПРАВЛЕНО: Якщо точка виходить за межі [Початок, Кінець], ми її НЕ малюємо
                 if (mathX < xSt || mathX > xFi)
                 {
                     prevPoint = null;
@@ -151,7 +137,6 @@ namespace Navchpract_2
 
                 if (prevMathX.HasValue)
                 {
-                    // Асимптота знаменника x = 2.0 та розрив функції x = 8.0
                     if (prevMathX.Value < 2.0f && mathX >= 2.0f) prevPoint = null;
                     if (prevMathX.Value < BREAK_X && mathX >= BREAK_X) prevPoint = null;
                 }
@@ -168,7 +153,6 @@ namespace Navchpract_2
 
                 if (prevPoint != null)
                 {
-                    // Захист від малювання вертикальних "спайків"
                     if (Math.Abs(sy - prevPoint.Value.Y) < h * 2)
                     {
                         g.DrawLine(graphPen, prevPoint.Value, currentPoint);
@@ -180,9 +164,6 @@ namespace Navchpract_2
             }
         }
 
-        // ==========================================
-        // ЗУМ І ПЕРЕТЯГУВАННЯ ГРАФІКА
-        // ==========================================
         private void PictureBox2_MouseWheel(object sender, MouseEventArgs e)
         {
             float oldMathX = ScreenToMathX(e.X, pictureBox2.Width);
@@ -224,14 +205,57 @@ namespace Navchpract_2
             pictureBox2.Cursor = Cursors.Cross;
         }
 
+        private void Chart1_MouseWheel(object sender, MouseEventArgs e)
+        {
+            try
+            {
+                var xAxis = chart1.ChartAreas[0].AxisX;
+                var yAxis = chart1.ChartAreas[0].AxisY;
+
+                double xMin = xAxis.ScaleView.ViewMinimum;
+                double xMax = xAxis.ScaleView.ViewMaximum;
+                double yMin = yAxis.ScaleView.ViewMinimum;
+                double yMax = yAxis.ScaleView.ViewMaximum;
+
+                if (double.IsNaN(xMin)) xMin = xAxis.Minimum;
+                if (double.IsNaN(xMax)) xMax = xAxis.Maximum;
+                if (double.IsNaN(yMin)) yMin = yAxis.Minimum;
+                if (double.IsNaN(yMax)) yMax = yAxis.Maximum;
+
+                double posX = xAxis.PixelPositionToValue(e.Location.X);
+                double posY = yAxis.PixelPositionToValue(e.Location.Y);
+
+                double zoomFactor = e.Delta > 0 ? 1.25 : 0.8;
+
+                double newXMin = posX - (posX - xMin) / zoomFactor;
+                double newXMax = posX + (xMax - posX) / zoomFactor;
+                double newYMin = posY - (posY - yMin) / zoomFactor;
+                double newYMax = posY + (yMax - posY) / zoomFactor;
+
+                if (e.Delta < 0 && (newXMin <= xAxis.Minimum || newXMax >= xAxis.Maximum || newYMin <= yAxis.Minimum || newYMax >= yAxis.Maximum))
+                {
+                    xAxis.ScaleView.ZoomReset(0);
+                    yAxis.ScaleView.ZoomReset(0);
+                }
+                else
+                {
+                    if (newXMin < xAxis.Minimum) newXMin = xAxis.Minimum;
+                    if (newXMax > xAxis.Maximum) newXMax = xAxis.Maximum;
+                    if (newYMin < yAxis.Minimum) newYMin = yAxis.Minimum;
+                    if (newYMax > yAxis.Maximum) newYMax = yAxis.Maximum;
+
+                    xAxis.ScaleView.Zoom(newXMin, newXMax);
+                    yAxis.ScaleView.Zoom(newYMin, newYMax);
+                }
+            }
+            catch { }
+        }
+
         private void button_build_Click(object sender, EventArgs e)
         {
             pictureBox2.Invalidate();
         }
 
-        // ==========================================
-        // ТАБУЛЮВАННЯ
-        // ==========================================
         private void button_protab_Click(object sender, EventArgs e)
         {
             dataGridView1.Rows.Clear();
@@ -254,13 +278,9 @@ namespace Navchpract_2
             }
             dataGridView1.ResumeLayout();
 
-            // 🔥 Оновлюємо малюнок при перерахунку
             pictureBox2.Invalidate();
         }
 
-        // ==========================================
-        // MS CHART
-        // ==========================================
         private void button1_Click(object sender, EventArgs e)
         {
             BuildChart();
@@ -276,6 +296,9 @@ namespace Navchpract_2
 
             area.CursorX.IsUserEnabled = true;
             area.CursorX.IsUserSelectionEnabled = true;
+            area.CursorY.IsUserEnabled = true;
+            area.CursorY.IsUserSelectionEnabled = true;
+
             area.AxisX.ScaleView.Zoomable = true;
             area.AxisY.ScaleView.Zoomable = true;
 
@@ -291,6 +314,8 @@ namespace Navchpract_2
             if (step <= 0) step = 0.12f;
 
             double prevY = double.NaN;
+            double actualMinY = double.MaxValue;
+            double actualMaxY = double.MinValue;
 
             for (double x = xSt; x <= xFi + 1e-6; x += step)
             {
@@ -309,11 +334,25 @@ namespace Navchpract_2
                         s.Points.Add(emptyPoint);
                     }
                     s.Points.AddXY(x, Math.Round(y, 4));
+
+                    if (y < actualMinY) actualMinY = y;
+                    if (y > actualMaxY) actualMaxY = y;
                 }
                 prevY = y;
             }
 
             chart1.Series.Add(s);
+
+            area.AxisX.Minimum = xSt;
+            area.AxisX.Maximum = xFi;
+
+            if (actualMinY != double.MaxValue && actualMaxY != double.MinValue)
+            {
+                double pad = (actualMaxY - actualMinY) * 0.1;
+                if (pad == 0) pad = 1;
+                area.AxisY.Minimum = Math.Round(actualMinY - pad, 2);
+                area.AxisY.Maximum = Math.Round(actualMaxY + pad, 2);
+            }
 
             area.AxisX.LabelStyle.Format = "0.##";
             area.AxisY.LabelStyle.Format = "0.##";
@@ -325,9 +364,6 @@ namespace Navchpract_2
             area.AxisY.LineWidth = 2;
         }
 
-        // ==========================================
-        // КЕРУВАННЯ ВІКНОМ
-        // ==========================================
         protected override void WndProc(ref Message m)
         {
             const int WM_NCHITTEST = 0x84;
@@ -377,9 +413,6 @@ namespace Navchpract_2
 
         private void pnlHeader_MouseUp(object sender, MouseEventArgs e) => isFormDragging = false;
 
-        // ================================
-        // ПАРСИНГ
-        // ================================
         private float Parse(string input, float def)
         {
             if (float.TryParse(input.Replace(",", "."),

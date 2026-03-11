@@ -2,7 +2,7 @@
 
 namespace Navchpract_2
 {
-    [Serializable] 
+    [Serializable]
     internal class Product
     {
         public Product(string name, int quantity, float price)

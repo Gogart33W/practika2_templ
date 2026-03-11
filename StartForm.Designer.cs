@@ -29,6 +29,8 @@
             this.графікиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.четвертийТижденьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.indZavd2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.практична41ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.практична42ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lblUserInfo = new System.Windows.Forms.Label();
             this.btnLogout = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
@@ -120,7 +122,9 @@
             // четвертийТижденьToolStripMenuItem
             // 
             this.четвертийТижденьToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.indZavd2ToolStripMenuItem});
+            this.indZavd2ToolStripMenuItem,
+            this.практична41ToolStripMenuItem,
+            this.практична42ToolStripMenuItem});
             this.четвертийТижденьToolStripMenuItem.Name = "четвертийТижденьToolStripMenuItem";
             this.четвертийТижденьToolStripMenuItem.Size = new System.Drawing.Size(159, 24);
             this.четвертийТижденьToolStripMenuItem.Text = "Четвертий тиждень";
@@ -128,9 +132,23 @@
             // indZavd2ToolStripMenuItem
             // 
             this.indZavd2ToolStripMenuItem.Name = "indZavd2ToolStripMenuItem";
-            this.indZavd2ToolStripMenuItem.Size = new System.Drawing.Size(202, 26);
+            this.indZavd2ToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.indZavd2ToolStripMenuItem.Text = "Індивідуальне 2";
             this.indZavd2ToolStripMenuItem.Click += new System.EventHandler(this.indZavd2ToolStripMenuItem_Click);
+            // 
+            // практична41ToolStripMenuItem
+            // 
+            this.практична41ToolStripMenuItem.Name = "практична41ToolStripMenuItem";
+            this.практична41ToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.практична41ToolStripMenuItem.Text = "Практична 4.1";
+            this.практична41ToolStripMenuItem.Click += new System.EventHandler(this.практична41ToolStripMenuItem_Click);
+            // 
+            // практична42ToolStripMenuItem
+            // 
+            this.практична42ToolStripMenuItem.Name = "практична42ToolStripMenuItem";
+            this.практична42ToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.практична42ToolStripMenuItem.Text = "Практична 4.2";
+            this.практична42ToolStripMenuItem.Click += new System.EventHandler(this.практична42ToolStripMenuItem_Click);
             // 
             // lblUserInfo
             // 
@@ -200,6 +218,8 @@
         private System.Windows.Forms.ToolStripMenuItem графікиToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem четвертийТижденьToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem indZavd2ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem практична41ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem практична42ToolStripMenuItem;
         private System.Windows.Forms.Label lblUserInfo;
         private System.Windows.Forms.Button btnLogout;
     }

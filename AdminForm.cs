@@ -45,7 +45,7 @@ namespace Navchpract_2
 
         private async void AdminForm_Load(object sender, EventArgs e)
         {
-            txtPassword.PasswordChar = '\0';
+            if (txtPassword != null) txtPassword.PasswordChar = '\0';
             ClearEditFieldsAction();
 
             if (!sessionUser.IsAdmin)
@@ -83,10 +83,8 @@ namespace Navchpract_2
                 toolStrip1.Items.Add(tsUndo);
                 toolStrip1.Items.Add(tsRedo);
             }
-
         }
 
-        #region Логіка Placeholder
         private void SetPasswordPlaceholder()
         {
             if (txtEditPassword == null) return;
@@ -112,9 +110,7 @@ namespace Navchpract_2
                 SetPasswordPlaceholder();
             }
         }
-        #endregion
 
-        #region Логіка UNDO / REDO
         private void RegisterUndoRedo(TextBox txt)
         {
             undoStacks[txt] = new Stack<string>();
@@ -183,16 +179,14 @@ namespace Navchpract_2
                 redoStacks[txtEditPassword].Clear();
             }
         }
-        #endregion
 
-        #region АСИНХРОННА Робота з файлами
         private async Task SaveToTxtFileAsync()
         {
             await Task.Run(() =>
             {
                 try
                 {
-                    using (StreamWriter sw = new StreamWriter(txtPath, false))
+                    using (StreamWriter sw = new StreamWriter(txtPath, false, System.Text.Encoding.UTF8))
                     {
                         foreach (var u in usersList) sw.WriteLine($"{u.Login};{u.Password};{u.IsAdmin}");
                     }
@@ -207,7 +201,8 @@ namespace Navchpract_2
             {
                 try
                 {
-                    using (BinaryWriter bw = new BinaryWriter(File.Open(binPath, FileMode.Create)))
+                    using (FileStream fs = new FileStream(binPath, FileMode.Create, FileAccess.Write, FileShare.None))
+                    using (BinaryWriter bw = new BinaryWriter(fs))
                     {
                         bw.Write(usersList.Count);
                         foreach (var u in usersList)
@@ -231,15 +226,21 @@ namespace Navchpract_2
                 try
                 {
                     List<CUser> temp = new List<CUser>();
-                    using (BinaryReader br = new BinaryReader(File.Open(binPath, FileMode.Open)))
+                    using (FileStream fs = new FileStream(binPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                     {
-                        int count = br.ReadInt32();
-                        for (int i = 0; i < count; i++)
+                        if (fs.Length > 0)
                         {
-                            string login = br.ReadString();
-                            string hashPass = br.ReadString();
-                            bool isAdmin = br.ReadBoolean();
-                            temp.Add(new CUser(login, hashPass, isAdmin));
+                            using (BinaryReader br = new BinaryReader(fs))
+                            {
+                                int count = br.ReadInt32();
+                                for (int i = 0; i < count; i++)
+                                {
+                                    string login = br.ReadString();
+                                    string hashPass = br.ReadString();
+                                    bool isAdmin = br.ReadBoolean();
+                                    temp.Add(new CUser(login, hashPass, isAdmin));
+                                }
+                            }
                         }
                     }
                     usersList = temp;
@@ -248,36 +249,37 @@ namespace Navchpract_2
                 catch { usersList.Clear(); }
             });
         }
-        #endregion
 
-        #region Оновлення інтерфейсу
         private void UpdateAllUI()
         {
             isUpdating = true;
-            listBoxBin.Items.Clear();
-            listBoxEditUsers.Items.Clear();
-            cmbEditSelectUser.Items.Clear();
+            if (listBoxBin != null) listBoxBin.Items.Clear();
+            if (listBoxEditUsers != null) listBoxEditUsers.Items.Clear();
+            if (cmbEditSelectUser != null) cmbEditSelectUser.Items.Clear();
 
             foreach (var u in usersList)
             {
                 string role = u.IsAdmin ? "Адмін" : "Юзер";
                 string cleanInfo = $"{u.Login} [{role}]";
 
-                listBoxBin.Items.Add(cleanInfo);
-                listBoxEditUsers.Items.Add(cleanInfo);
-                cmbEditSelectUser.Items.Add(u.Login);
+                if (listBoxBin != null) listBoxBin.Items.Add(cleanInfo);
+                if (listBoxEditUsers != null) listBoxEditUsers.Items.Add(cleanInfo);
+                if (cmbEditSelectUser != null) cmbEditSelectUser.Items.Add(u.Login);
             }
 
-            listBoxTxt.Items.Clear();
-            if (File.Exists(txtPath))
+            if (listBoxTxt != null)
             {
-                foreach (string line in File.ReadAllLines(txtPath))
+                listBoxTxt.Items.Clear();
+                if (File.Exists(txtPath))
                 {
-                    string[] parts = line.Split(';');
-                    if (parts.Length >= 3)
+                    foreach (string line in File.ReadAllLines(txtPath))
                     {
-                        string role = bool.Parse(parts[2]) ? "Адмін" : "Юзер";
-                        listBoxTxt.Items.Add($"{parts[0]} [{role}]");
+                        string[] parts = line.Split(';');
+                        if (parts.Length >= 3 && bool.TryParse(parts[2], out bool isAdminParsed))
+                        {
+                            string role = isAdminParsed ? "Адмін" : "Юзер";
+                            listBoxTxt.Items.Add($"{parts[0]} [{role}]");
+                        }
                     }
                 }
             }
@@ -287,8 +289,14 @@ namespace Navchpract_2
         private void ClearEditFieldsAction()
         {
             isUpdating = true;
-            txtEditLogin.Clear(); chkEditIsAdmin.Checked = false;
-            listBoxEditUsers.SelectedIndex = -1; cmbEditSelectUser.SelectedIndex = -1; cmbEditSelectUser.Text = string.Empty;
+            if (txtEditLogin != null) txtEditLogin.Clear();
+            if (chkEditIsAdmin != null) chkEditIsAdmin.Checked = false;
+            if (listBoxEditUsers != null) listBoxEditUsers.SelectedIndex = -1;
+            if (cmbEditSelectUser != null)
+            {
+                cmbEditSelectUser.SelectedIndex = -1;
+                cmbEditSelectUser.Text = string.Empty;
+            }
 
             if (txtEditLogin != null) txtEditLogin.Enabled = false;
             if (txtEditPassword != null) txtEditPassword.Enabled = false;
@@ -300,24 +308,28 @@ namespace Navchpract_2
             InitUndoRedoState();
             isUpdating = false;
         }
-        #endregion
 
-        #region АСИНХРОННА Перевірка незбережених даних
         private bool HasUnsavedData()
         {
             if (hasUnsavedChanges) return true;
 
-            if (!string.IsNullOrWhiteSpace(txtLogin.Text) || !string.IsNullOrWhiteSpace(txtPassword.Text))
-                return true;
+            if (txtLogin != null && txtPassword != null)
+            {
+                if (!string.IsNullOrWhiteSpace(txtLogin.Text) || !string.IsNullOrWhiteSpace(txtPassword.Text))
+                    return true;
+            }
 
-            if (cmbEditSelectUser.SelectedIndex >= 0 && cmbEditSelectUser.SelectedIndex < usersList.Count)
+            if (cmbEditSelectUser != null && cmbEditSelectUser.SelectedIndex >= 0 && cmbEditSelectUser.SelectedIndex < usersList.Count)
             {
                 var u = usersList[cmbEditSelectUser.SelectedIndex];
-                bool isPasswordChanged = txtEditPassword.Text != "Введіть новий пароль" && !string.IsNullOrWhiteSpace(txtEditPassword.Text);
+                bool isPasswordChanged = txtEditPassword != null && txtEditPassword.Text != "Введіть новий пароль" && !string.IsNullOrWhiteSpace(txtEditPassword.Text);
 
-                if (txtEditLogin.Text.Trim() != u.Login || chkEditIsAdmin.Checked != u.IsAdmin || isPasswordChanged)
+                if (txtEditLogin != null && chkEditIsAdmin != null)
                 {
-                    return true;
+                    if (txtEditLogin.Text.Trim() != u.Login || chkEditIsAdmin.Checked != u.IsAdmin || isPasswordChanged)
+                    {
+                        return true;
+                    }
                 }
             }
             return false;
@@ -327,23 +339,22 @@ namespace Navchpract_2
         {
             string newHashForEdit = null;
             string newHashForAdd = null;
-
             bool saveNeeded = false;
 
-            if (cmbEditSelectUser.SelectedIndex >= 0 && cmbEditSelectUser.SelectedIndex < usersList.Count)
+            if (cmbEditSelectUser != null && cmbEditSelectUser.SelectedIndex >= 0 && cmbEditSelectUser.SelectedIndex < usersList.Count)
             {
                 int index = cmbEditSelectUser.SelectedIndex;
                 var u = usersList[index];
-                string newLogin = txtEditLogin.Text.Trim();
-                string newPass = txtEditPassword.Text.Trim();
+                string newLogin = txtEditLogin != null ? txtEditLogin.Text.Trim() : "";
+                string newPass = txtEditPassword != null ? txtEditPassword.Text.Trim() : "";
                 bool isPasswordChanged = newPass != "Введіть новий пароль" && !string.IsNullOrWhiteSpace(newPass);
 
                 if (!string.IsNullOrWhiteSpace(newLogin) && !usersList.Where((user, i) => i != index).Any(user => user.Login.Equals(newLogin, StringComparison.OrdinalIgnoreCase)))
                 {
-                    if (!(u.Login.Equals(sessionUser.Login, StringComparison.OrdinalIgnoreCase) && !chkEditIsAdmin.Checked))
+                    if (!(u.Login.Equals(sessionUser.Login, StringComparison.OrdinalIgnoreCase) && chkEditIsAdmin != null && !chkEditIsAdmin.Checked))
                     {
                         u.Login = newLogin;
-                        u.IsAdmin = chkEditIsAdmin.Checked;
+                        if (chkEditIsAdmin != null) u.IsAdmin = chkEditIsAdmin.Checked;
                         if (u.Login.Equals(sessionUser.Login, StringComparison.OrdinalIgnoreCase)) sessionUser.Login = newLogin;
                         saveNeeded = true;
 
@@ -356,13 +367,13 @@ namespace Navchpract_2
                 }
             }
 
-            if (!string.IsNullOrWhiteSpace(txtLogin.Text) && !string.IsNullOrWhiteSpace(txtPassword.Text))
+            if (txtLogin != null && txtPassword != null && !string.IsNullOrWhiteSpace(txtLogin.Text) && !string.IsNullOrWhiteSpace(txtPassword.Text))
             {
                 string login = txtLogin.Text.Trim();
                 string pass = txtPassword.Text.Trim();
                 if (!usersList.Any(u => u.Login.Equals(login, StringComparison.OrdinalIgnoreCase)))
                 {
-                    bool isAdmin = chkIsAdmin.Checked;
+                    bool isAdmin = chkIsAdmin != null && chkIsAdmin.Checked;
                     await Task.Run(() => { newHashForAdd = CryptoHelper.HashPassword(pass); });
                     usersList.Add(new CUser(login, newHashForAdd, isAdmin));
                     saveNeeded = true;
@@ -392,83 +403,88 @@ namespace Navchpract_2
             }
             else closeAction();
         }
-        #endregion
 
-        #region АСИНХРОННА Реєстрація та Кнопки
         private async void btnRegister_Click(object sender, EventArgs e)
         {
+            if (txtLogin == null || txtPassword == null) return;
             string login = txtLogin.Text.Trim(), pass = txtPassword.Text.Trim();
             if (string.IsNullOrWhiteSpace(login) || string.IsNullOrWhiteSpace(pass)) { MessageBox.Show("Заповніть поля!"); return; }
             if (usersList.Any(u => u.Login.Equals(login, StringComparison.OrdinalIgnoreCase))) { MessageBox.Show("Логін існує!"); return; }
 
-            btnRegister.Enabled = false;
+            if (btnRegister != null) btnRegister.Enabled = false;
             this.Cursor = Cursors.WaitCursor;
 
             string hashedPass = "";
-            bool isAdmin = chkIsAdmin.Checked;
+            bool isAdmin = chkIsAdmin != null && chkIsAdmin.Checked;
             await Task.Run(() => { hashedPass = CryptoHelper.HashPassword(pass); });
 
             usersList.Add(new CUser(login, hashedPass, isAdmin));
             await SaveToTxtFileAsync();
             await SaveToBinFileAsync();
 
-            txtLogin.Clear(); txtPassword.Clear(); chkIsAdmin.Checked = false;
+            txtLogin.Clear();
+            txtPassword.Clear();
+            if (chkIsAdmin != null) chkIsAdmin.Checked = false;
             UpdateAllUI();
 
             this.Cursor = Cursors.Default;
-            btnRegister.Enabled = true;
+            if (btnRegister != null) btnRegister.Enabled = true;
             this.ActiveControl = null;
         }
 
         private async void btnSaveBin_Click(object sender, EventArgs e)
         {
-            btnSaveBin.Enabled = false;
+            if (btnSaveBin != null) btnSaveBin.Enabled = false;
             await SaveToBinFileAsync();
             UpdateAllUI();
-            btnSaveBin.Enabled = true;
+            if (btnSaveBin != null) btnSaveBin.Enabled = true;
             MessageBox.Show("Збережено!");
             this.ActiveControl = null;
         }
 
         private async void btnLoadBin_Click(object sender, EventArgs e)
         {
-            btnLoadBin.Enabled = false;
+            if (btnLoadBin != null) btnLoadBin.Enabled = false;
             await LoadFromBinFileAsync();
             UpdateAllUI();
-            btnLoadBin.Enabled = true;
+            if (btnLoadBin != null) btnLoadBin.Enabled = true;
             MessageBox.Show("Завантажено!");
             this.ActiveControl = null;
         }
 
-        private void btnClearBin_Click(object sender, EventArgs e) { listBoxBin.Items.Clear(); listBoxTxt.Items.Clear(); this.ActiveControl = null; }
+        private void btnClearBin_Click(object sender, EventArgs e)
+        {
+            if (listBoxBin != null) listBoxBin.Items.Clear();
+            if (listBoxTxt != null) listBoxTxt.Items.Clear();
+            this.ActiveControl = null;
+        }
 
         private async void btnLoadEditList_Click(object sender, EventArgs e)
         {
-            btnLoadEditList.Enabled = false;
+            if (btnLoadEditList != null) btnLoadEditList.Enabled = false;
             await LoadFromBinFileAsync();
             UpdateAllUI();
             ClearEditFieldsAction();
-            btnLoadEditList.Enabled = true;
+            if (btnLoadEditList != null) btnLoadEditList.Enabled = true;
         }
 
         private void btnGoToStart_Click(object sender, EventArgs e) { CheckAndClose(() => this.Close()); }
         private void btnCloseForm_Click(object sender, EventArgs e) { CheckAndClose(() => Application.Exit()); }
-        #endregion
 
-        #region АСИНХРОННЕ Редагування
         private async Task SaveSelectedUserChangesAsync(bool isApplyOnly)
         {
+            if (cmbEditSelectUser == null) return;
             int index = cmbEditSelectUser.SelectedIndex;
             if (index >= 0)
             {
-                string newLogin = txtEditLogin.Text.Trim();
-                string newPassText = txtEditPassword.Text.Trim();
+                string newLogin = txtEditLogin != null ? txtEditLogin.Text.Trim() : "";
+                string newPassText = txtEditPassword != null ? txtEditPassword.Text.Trim() : "";
                 bool isPasswordChanged = newPassText != "Введіть новий пароль" && !string.IsNullOrWhiteSpace(newPassText);
 
                 if (string.IsNullOrWhiteSpace(newLogin)) { MessageBox.Show("Порожній логін!"); return; }
                 if (usersList.Where((u, i) => i != index).Any(u => u.Login.Equals(newLogin, StringComparison.OrdinalIgnoreCase))) { MessageBox.Show("Логін зайнятий!"); return; }
 
-                if (usersList[index].Login.Equals(sessionUser.Login, StringComparison.OrdinalIgnoreCase) && !chkEditIsAdmin.Checked)
+                if (chkEditIsAdmin != null && usersList[index].Login.Equals(sessionUser.Login, StringComparison.OrdinalIgnoreCase) && !chkEditIsAdmin.Checked)
                 {
                     MessageBox.Show("Ви не можете зняти права з себе!", "Захист", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                     chkEditIsAdmin.Checked = true;
@@ -491,7 +507,7 @@ namespace Navchpract_2
                     usersList[index].Password = newHash;
                 }
 
-                usersList[index].IsAdmin = chkEditIsAdmin.Checked;
+                if (chkEditIsAdmin != null) usersList[index].IsAdmin = chkEditIsAdmin.Checked;
 
                 if (!isApplyOnly)
                 {
@@ -513,6 +529,7 @@ namespace Navchpract_2
 
         private async Task DeleteSelectedUserAsync()
         {
+            if (cmbEditSelectUser == null) return;
             int index = cmbEditSelectUser.SelectedIndex;
             if (index >= 0)
             {
@@ -539,18 +556,18 @@ namespace Navchpract_2
 
         private void listBoxEditUsers_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (isUpdating || listBoxEditUsers.SelectedIndex < 0) return;
+            if (isUpdating || listBoxEditUsers == null || listBoxEditUsers.SelectedIndex < 0) return;
             isUpdating = true;
-            cmbEditSelectUser.SelectedIndex = listBoxEditUsers.SelectedIndex;
+            if (cmbEditSelectUser != null) cmbEditSelectUser.SelectedIndex = listBoxEditUsers.SelectedIndex;
             var u = usersList[listBoxEditUsers.SelectedIndex];
 
-            txtEditLogin.Enabled = true;
-            txtEditPassword.Enabled = true;
-            chkEditIsAdmin.Enabled = true;
+            if (txtEditLogin != null) txtEditLogin.Enabled = true;
+            if (txtEditPassword != null) txtEditPassword.Enabled = true;
+            if (chkEditIsAdmin != null) chkEditIsAdmin.Enabled = true;
 
-            txtEditLogin.Text = u.Login;
+            if (txtEditLogin != null) txtEditLogin.Text = u.Login;
             SetPasswordPlaceholder();
-            chkEditIsAdmin.Checked = u.IsAdmin;
+            if (chkEditIsAdmin != null) chkEditIsAdmin.Checked = u.IsAdmin;
 
             InitUndoRedoState();
             isUpdating = false;
@@ -558,22 +575,21 @@ namespace Navchpract_2
 
         private void cmbEditSelectUser_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (isUpdating || cmbEditSelectUser.SelectedIndex < 0) return;
+            if (isUpdating || cmbEditSelectUser == null || cmbEditSelectUser.SelectedIndex < 0) return;
             isUpdating = true;
-            listBoxEditUsers.SelectedIndex = cmbEditSelectUser.SelectedIndex;
+            if (listBoxEditUsers != null) listBoxEditUsers.SelectedIndex = cmbEditSelectUser.SelectedIndex;
             var u = usersList[cmbEditSelectUser.SelectedIndex];
 
-            txtEditLogin.Enabled = true;
-            txtEditPassword.Enabled = true;
-            chkEditIsAdmin.Enabled = true;
+            if (txtEditLogin != null) txtEditLogin.Enabled = true;
+            if (txtEditPassword != null) txtEditPassword.Enabled = true;
+            if (chkEditIsAdmin != null) chkEditIsAdmin.Enabled = true;
 
-            txtEditLogin.Text = u.Login;
+            if (txtEditLogin != null) txtEditLogin.Text = u.Login;
             SetPasswordPlaceholder();
-            chkEditIsAdmin.Checked = u.IsAdmin;
+            if (chkEditIsAdmin != null) chkEditIsAdmin.Checked = u.IsAdmin;
 
             InitUndoRedoState();
             isUpdating = false;
         }
-        #endregion
     }
 }

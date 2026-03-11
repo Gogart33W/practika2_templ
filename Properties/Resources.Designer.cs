@@ -63,6 +63,16 @@ namespace Navchpract_2.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap _3249740 {
+            get {
+                object obj = ResourceManager.GetObject("_3249740", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap _62124 {
             get {
                 object obj = ResourceManager.GetObject("62124", resourceCulture);

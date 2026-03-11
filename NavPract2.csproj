@@ -140,6 +140,18 @@
     <Compile Include="StartForm.Designer.cs">
       <DependentUpon>StartForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="TimerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TimerForm.Designer.cs">
+      <DependentUpon>TimerForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tree.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tree.Designer.cs">
+      <DependentUpon>Tree.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserFeedForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -194,6 +206,12 @@
     </Compile>
     <EmbeddedResource Include="StartForm.resx">
       <DependentUpon>StartForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TimerForm.resx">
+      <DependentUpon>TimerForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tree.resx">
+      <DependentUpon>Tree.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UserFeedForm.resx">
       <DependentUpon>UserFeedForm.cs</DependentUpon>
@@ -292,6 +310,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Знімок екрана 2026-03-04 110025.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_32497401.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

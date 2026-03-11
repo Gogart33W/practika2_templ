@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -27,7 +28,7 @@ namespace Navchpract_2
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (rez == DialogResult.Yes)
             {
-                this.Close(); 
+                this.Close();
             }
         }
 
@@ -51,12 +52,26 @@ namespace Navchpract_2
             return isValid;
         }
 
+        private void UpdateGlobalData()
+        {
+            if (double.TryParse(textBoxNumeric.Text.Replace(',', '.'), NumberStyles.Any, CultureInfo.InvariantCulture, out double val))
+            {
+                MyClass.number = val;
+            }
+            else
+            {
+                MyClass.number = 0;
+            }
+            MyClass.str = textBoxText.Text;
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
             if (!ValidateFields()) return;
 
-            DataValue.Numeric = textBoxNumeric.Text;
-            DataValue.Text = textBoxText.Text;
+            UpdateGlobalData();
+
+            this.Opacity = 0;
 
             NoModalForm noModal = new NoModalForm(textBoxNumeric.Text, textBoxText.Text);
             noModal.textBoxNumericM1.Text = textBoxNumeric.Text;
@@ -64,24 +79,38 @@ namespace Navchpract_2
             noModal.MyStr_Numeric = textBoxNumeric.Text;
             noModal.MyStr_Text = textBoxText.Text;
 
-            noModal.Show();
+            noModal.FormClosed += (s, args) =>
+            {
+                if (!this.IsDisposed)
+                {
+                    this.Opacity = 1;
+                }
+            };
+
+            noModal.Show(this);
         }
 
         private void buttonToModal_Click(object sender, EventArgs e)
         {
             if (!ValidateFields()) return;
 
-            DataValue.Numeric = textBoxNumeric.Text;
-            DataValue.Text = textBoxText.Text;
+            UpdateGlobalData();
 
             this.Hide();
-            ModalForm modal = new ModalForm(textBoxNumeric.Text, textBoxText.Text);
-            modal.textBoxNumericM1.Text = textBoxNumeric.Text;
-            modal.textBoxTextM1.Text = textBoxText.Text;
-            modal.MyStr_Numeric = textBoxNumeric.Text;
-            modal.MyStr_Text = textBoxText.Text;
+            using (ModalForm modal = new ModalForm(textBoxNumeric.Text, textBoxText.Text))
+            {
+                modal.textBoxNumericM1.Text = textBoxNumeric.Text;
+                modal.textBoxTextM1.Text = textBoxText.Text;
+                modal.MyStr_Numeric = textBoxNumeric.Text;
+                modal.MyStr_Text = textBoxText.Text;
 
-            modal.ShowDialog();
+                modal.ShowDialog();
+            }
+
+            if (!this.IsDisposed)
+            {
+                this.Show();
+            }
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)
@@ -100,12 +129,12 @@ namespace Navchpract_2
             e.Handled = true;
         }
 
-        private void textBoxText_KeyPress(object sender, KeyPressEventArgs e) { }
-    }
-
-    public static class DataValue
-    {
-        public static string Numeric;
-        public static string Text;
+        private void textBoxText_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true;
+            }
+        }
     }
 }

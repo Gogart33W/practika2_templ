@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Net;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Navchpract_2
@@ -20,7 +21,6 @@ namespace Navchpract_2
 
         private Image hdMapImage;
         private string mapFilePath;
-        private bool isLoadingMap = true;
 
         private const float BASE_MAP_W = 1000f;
         private const float BASE_MAP_H = 452f;
@@ -69,6 +69,10 @@ namespace Navchpract_2
             this.MouseClick += Map_MouseClick;
         }
 
+        private void MapForm_Load(object sender, EventArgs e)
+        {
+        }
+
         private async void LoadOrDownloadMapAsync()
         {
             if (!File.Exists(mapFilePath))
@@ -76,11 +80,14 @@ namespace Navchpract_2
                 try
                 {
                     string url = "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/World_map_blank_without_borders.svg/1000px-World_map_blank_without_borders.svg.png";
-                    using (WebClient client = new WebClient())
+                    await Task.Run(() =>
                     {
-                        client.Headers.Add("User-Agent", "Mozilla/5.0");
-                        await client.DownloadFileTaskAsync(url, mapFilePath);
-                    }
+                        using (WebClient client = new WebClient())
+                        {
+                            client.Headers.Add("User-Agent", "Mozilla/5.0");
+                            client.DownloadFile(url, mapFilePath);
+                        }
+                    });
                 }
                 catch { }
             }
@@ -88,7 +95,6 @@ namespace Navchpract_2
             if (File.Exists(mapFilePath))
             {
                 hdMapImage = Image.FromFile(mapFilePath);
-                isLoadingMap = false;
                 ClampCamera();
                 this.Invalidate();
             }
@@ -96,7 +102,11 @@ namespace Navchpract_2
 
         private void Map_MouseClick(object sender, MouseEventArgs e)
         {
-            if (e.X > this.Width - 45 && e.Y < 45) this.Close();
+            if (e.X >= this.Width - 45 && e.X <= this.Width - 10 && e.Y >= 10 && e.Y <= 40)
+            {
+                this.Close();
+                return;
+            }
 
             foreach (var m in markers)
             {
@@ -169,8 +179,13 @@ namespace Navchpract_2
             if (changed) this.Invalidate();
         }
 
-        private bool IsHit(Point m, float x, float y) => Math.Pow(m.X - x, 2) + Math.Pow(m.Y - y, 2) < 225;
-        private void Map_MouseUp(object sender, MouseEventArgs e) { isPanning = false; this.Cursor = Cursors.Default; }
+        private bool IsHit(Point m, float x, float y) => (m.X - x) * (m.X - x) + (m.Y - y) * (m.Y - y) < 225;
+
+        private void Map_MouseUp(object sender, MouseEventArgs e)
+        {
+            isPanning = false;
+            this.Cursor = Cursors.Default;
+        }
 
         protected override void OnPaint(PaintEventArgs e)
         {
@@ -225,11 +240,6 @@ namespace Navchpract_2
                 g.FillEllipse(Brushes.Cyan, x - 3, y - 3, 6, 6);
                 g.DrawString(m.Name, font, new SolidBrush(Color.FromArgb(180, 0, 255, 255)), x + 8, y - 7);
             }
-        }
-
-        private void MapForm_Load(object sender, EventArgs e)
-        {
-
         }
     }
 }
